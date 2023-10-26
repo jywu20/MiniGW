@@ -72,5 +72,5 @@ end
     ]
     full_1BZ = hcat(
         [0.1 * [i, j, 0.0] for i in -4 : 5 for j in -4 : 5]...)
-    @test equivalent_grid(expand_sym_reduced_grid(irreducible_1BZ, ops), full_1BZ) 
+    @test equivalent_grids(expand_sym_reduced_grid(irreducible_1BZ, ops), full_1BZ) 
 end

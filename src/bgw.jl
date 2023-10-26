@@ -4,7 +4,8 @@
 export Ry_BGW, 
     BerkeleyGWSpinorWaveFunction,
     read_wavefunction,
-    read_wavefunctions
+    read_wavefunctions, 
+    transition_matrix_def
 
 const Ry_BGW =  13.6056925
 
@@ -12,7 +13,8 @@ struct BerkeleyGWSpinorWaveFunction <: AbstractGWWaveFunction
     fid::HDF5.File
     
     nrk::Int
-    reduced_1BZ::Matrix{Float64}
+    irreducible_1BZ::Matrix{Float64}
+    full_1BZ::Matrix{Float64}
     el::Matrix{Float64}
 
     gk_ranges::Vector{UnitRange} 
@@ -21,7 +23,7 @@ struct BerkeleyGWSpinorWaveFunction <: AbstractGWWaveFunction
     gvecs::Vector{Matrix{Int}}
 end
 
-function BerkeleyGWSpinorWaveFunction(fid::HDF5.File)
+function BerkeleyGWSpinorWaveFunction(fid::HDF5.File; tol_sym = 1e-6)
     if read(fid["mf_header/kpoints/nspinor"]) != 2
         throw("The HDF5 file is not a spinor wave function.")
     end
@@ -34,6 +36,11 @@ function BerkeleyGWSpinorWaveFunction(fid::HDF5.File)
 
     nrk = fid["mf_header/kpoints/nrk"] |> read
     rk = fid["mf_header/kpoints/rk"] |> read
+    
+    ntran = fid["mf_header/symmetry/ntran"] |> read
+    full_1BZ = expand_sym_reduced_grid(rk, map(1 : ntran) do sym_idx
+        fid["mf_header/symmetry/mtrx"][:, :, sym_idx]
+    end, tol = tol_sym)
     
     # Finding how many G vectors each k point has 
     ngk = fid["mf_header/kpoints/ngk"] |> read 
@@ -53,7 +60,8 @@ function BerkeleyGWSpinorWaveFunction(fid::HDF5.File)
     end
     
     BerkeleyGWSpinorWaveFunction(fid, 
-        nrk, rk, el, 
+        nrk, rk, full_1BZ, 
+        el, 
         gk_ranges, ngk, ngkmax, gvecs)
 end
 
@@ -140,11 +148,62 @@ end
 #region Transition matrix 
 
 """
+`q_idx` is assumed to be the index in `wfn.irreducible`; 
+some optimization may be done here.
+
+TODO: this is actually wrong - 
+at this or that point, 
+we will need to consider the possibility that 
+k and q are in the irreducible 1BZ 
+but k + q is not.
+"""
+function find_k_plus_q(wfn::BerkeleyGWSpinorWaveFunction, k_idx, q_idx)
+    irreducible_1BZ = wfn.irreducible_1BZ
+    k_plus_q =  irreducible_1BZ[:, k_idx] + irreducible_1BZ[:, q_idx]
+    find_in_periodic_grid(irreducible_1BZ, k_plus_q)
+end
+
+"""
+`G_idx` is an index in the polarizability matrix; 
+usually the GW cutoff energy is chosen to be much smaller 
+than the DFT cutoff energy, 
+so we assume that in the G grid of `k_idx` and the G grid of `k_plus_q`, 
+`G_idx` should refer to the same thing.
+`G′_idx` is an index in the G grid of `k_idx`.
+Some optimization may be done here.
+"""
+function find_G_plus_G′(wfn::BerkeleyGWSpinorWaveFunction, k_idx, k_plus_q_idx, G_idx, G′_idx)
+    G_grid_of_k = wfn.gvecs[k_idx] 
+    G_grid_of_k_plus_q = wfn.gvecs[k_plus_q_idx]
+
+    G  = G_grid_of_k[:, G_idx]
+    G′ = G_grid_of_k[:, G′_idx]
+    find_in_grid(G_grid_of_k_plus_q, G + G′)
+end
+
+"""
 The most naive implementation of the transition matrix M_nn'(k, q, G).
+
+TODO: testing 
 """
 function transition_matrix_def(wfn::BerkeleyGWSpinorWaveFunction, 
     n, n′, k_idx, q_idx, G_idx)
     
+    k_plus_q_idx = find_k_plus_q(wfn, k_idx, q_idx)
+    
+    c_n′k_Gσ       = read_wavefunction(wfn, n′, k_idx)
+    c_nk_plus_q_Gσ = read_wavefunction(wfn, n, k_plus_q_idx)
+
+    sum(map(1 : wfn.ngk[k_idx]) do G′_idx
+        G_plus_G′_idx = find_G_plus_G′(wfn, k_idx, k_plus_q_idx, G_idx, G′_idx)
+        if G_plus_G′_idx == -1
+            return 0.0
+        end
+        
+        sum(map(1:2) do σ_idx
+            c_nk_plus_q_Gσ[G_plus_G′_idx, σ_idx, :]' * c_n′k_Gσ[G′_idx, σ_idx, :]
+        end)
+    end)
 end
 
 #endregion 

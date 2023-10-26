@@ -1,5 +1,6 @@
 export find_in_grid, wigner_seitz, find_in_periodic_grid, 
-    equivalent_grid,
+    equivalent_grids,
+    equivalent_vectors,
     expand_sym_reduced_grid
 
 """
@@ -54,7 +55,7 @@ function find_in_periodic_grid(grid::AbstractMatrix, vec::AbstractVector; tol = 
     return -1
 end
 
-function equivalent_grid(grid1::AbstractMatrix, grid2::AbstractMatrix; tol = 1e-10)
+function equivalent_grids(grid1::AbstractMatrix, grid2::AbstractMatrix; tol = 1e-10)
     if size(grid1) != size(grid2)
         return false
     end
@@ -113,3 +114,10 @@ function expand_sym_reduced_grid(grid::AbstractMatrix, operations::AbstractVecto
     hcat(results...)
 end
 
+function equivalent_vectors(v1::AbstractVector, v2::AbstractVector; tol = 1e-10)
+    norm(v1 - v2) <= tol
+end
+
+function equivalent_periodic_vectors(v1::AbstractVector, v2::AbstractVector; tol = 1e-10)
+    norm(wigner_seitz.(v1 - v2)) <= tol  
+end

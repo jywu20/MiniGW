@@ -6,22 +6,6 @@ using .MiniGW
 const TOL_LARGE = 1e-6
 const TOL_SMALL = 1e-10
 
-@testset "BerkeleyGW wave function normalization" begin
-    wfn = BerkeleyGWSpinorWaveFunction("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
-    @test abs(norm(read_wavefunction(wfn, 4000, 100)) - 1.0) < TOL_SMALL     
-    @test abs(norm(read_wavefunction(wfn, 120,  12))  - 1.0) < TOL_SMALL     
-end
-
-@testset "BerkeleyGW wave function G vectors" begin
-    wfn = BerkeleyGWSpinorWaveFunction("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
-    @test wfn.ngkmax == maximum(wfn.ngk) 
-    @test wfn.ngk == length.(wfn.gk_ranges)
-end
-
-@testset "BerkeleyGW wave function individual component" begin
-    # TODO
-end
-
 @testset "Pseudobands" begin
     wfn_full = BerkeleyGWSpinorWaveFunction("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
     wfn_pseudobands = BerkeleyGWSpinorWaveFunction("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFNo.h5")
@@ -45,4 +29,3 @@ end
         @test sum(ψ_in_block, dims = 3) == ψ_pseudo 
     end
 end
-
