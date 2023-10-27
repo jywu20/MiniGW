@@ -1,30 +1,26 @@
 using LinearAlgebra
 using Test
 using ProgressMeter
+using Plots
 include("../src/MiniGW.jl")
 using .MiniGW
 
 wfn = BerkeleyGWSpinorWaveFunction("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
 
-n_range = 117:120
-n′_range = 1999:2002
-G_idx = 810 
-k_idx = 2
-q_idx = 3
+n_range = 1:120
+n′_range = 3939:4000
+G_idx = 3000
+k_idx = 1 
+q_idx = 1
 
-M_nn′ = zeros(ComplexF64, length(n_range), length(n′_range))
+@time M_nn′ = transition_matrix_irreducible_1BZ(wfn, n_range, n′_range, k_idx, q_idx, G_idx)
 
-let progress = Progress(length(M_nn′), barglyphs=BarGlyphs("[=> ]"))
-    for (n_idx, n) in enumerate(n_range)
-        for (n′_idx, n′) in enumerate(n′_range) 
-            M_nn′[n_idx, n′_idx] = 
-                transition_matrix_irreducible_1BZ_def(wfn, n, n′, k_idx, q_idx, G_idx)
-            next!(progress)
-        end
-    end
+display(M_nn′' * M_nn′)
+let p = heatmap(norm.(M_nn′' * M_nn′), aspect_ratio = :equal)
+    xlims!(p, (0.5, length(n′_range) + 0.5))
+    ylims!(p, (0.5, length(n′_range) + 0.5))
+    p
 end
-
-display(M_nn′)
 
 let χ = 0.0
     for n in eachindex(n_range)

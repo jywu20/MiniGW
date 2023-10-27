@@ -363,3 +363,8 @@ q_idx = 3
 With no pseudobands : 0.011189987027120523 + 0.0im
 With pseudobands    : 0.008070646302970757 + 1.0842021724855044e-19im
 ```
+
+Find peak G vectors:
+```julia
+map(x -> top_n_positions(read_wavefunction(wfn, x, 2)[:, 2], 10), [3939, 3980, 4000])
+```

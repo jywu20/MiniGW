@@ -5,7 +5,8 @@ export Ry_BGW,
     BerkeleyGWSpinorWaveFunction,
     read_wavefunction,
     read_wavefunctions, 
-    transition_matrix_irreducible_1BZ_def
+    transition_matrix_irreducible_1BZ_def,
+    transition_matrix_irreducible_1BZ
 
 const Ry_BGW =  13.6056925
 
@@ -114,6 +115,7 @@ function read_wavefunction(wfn::BerkeleyGWSpinorWaveFunction,
     # This shouldn't be a major headache right now 
     # since the cutoff energy is usually large enough; 
     # still it has to be corrected at a certain stage 
+    # Currently the extend_G_grid flag should always be false
     ngkmax = wfn.ngkmax
     extended_complex_wavefunction = zeros(ComplexF64, ngkmax, 2)
     extended_complex_wavefunction[1 : size(compelx_wavefunction)[1], :] = compelx_wavefunction
@@ -182,8 +184,7 @@ end
 
 """
 The most naive implementation of the transition matrix M_nn'(k, q, G).
-
-TODO: testing 
+`n` and `n′` should be scalars.
 """
 function transition_matrix_irreducible_1BZ_def(wfn::BerkeleyGWSpinorWaveFunction, 
     n, n′, k_idx, q_idx, G_idx)
@@ -205,25 +206,55 @@ function transition_matrix_irreducible_1BZ_def(wfn::BerkeleyGWSpinorWaveFunction
     end)
 end
 
+function indices_of_G_plus_G′(wfn::BerkeleyGWSpinorWaveFunction, 
+    k_idx, q_idx, G_idx)
+    k_plus_q_idx = find_k_plus_q_irreducible_1BZ(wfn, k_idx, q_idx)
+    
+    # Since G′ is confined in the G grid of k, 
+    # the number of G + G′, once G is given, 
+    # is the same as the size of the G grid of k.
+    G_plus_G′_indices = zeros(Int, wfn.ngk[k_idx])
+
+    for G′_idx in 1 : wfn.ngk[k_idx]
+        G_plus_G′_indices[G′_idx] = 
+            find_G_plus_G′(wfn, k_idx, k_plus_q_idx, G_idx, G′_idx)
+    end
+    
+    G_plus_G′_indices
+end
+
 """
 Some acceleration added. 
+The most time consuming step here 
+Since each k point has ~36000 G vectors, 
+storing the indices of G+G′ in the G grid of k+q for all G′ is simply infeasible
+-- also note that we haven't include the dimension for the choice of k 
+and the dimension for the choice of q yet.
+Since the indices of G+G' has to be re-evaluated for every (k, q, G), 
+but not for every (n, n′),
+we decide that calculating G+G′ for once  
+and then calculating M_nn′(k, q, G) for all possible n and n′
+without recalculating the positions of G+G' seems to be a good idea.
+Therefore 
 """
 function transition_matrix_irreducible_1BZ(wfn::BerkeleyGWSpinorWaveFunction, 
     n, n′, k_idx, q_idx, G_idx)
-    
+     
     k_plus_q_idx = find_k_plus_q_irreducible_1BZ(wfn, k_idx, q_idx)
-    
     c_n′k_Gσ       = read_wavefunction(wfn, n′, k_idx)
     c_nk_plus_q_Gσ = read_wavefunction(wfn, n, k_plus_q_idx)
+    G_plus_G′_indices = indices_of_G_plus_G′(wfn, k_idx, q_idx, G_idx)
+    zero_nn′ = zeros(ComplexF64, length(n), length(n′))
 
     sum(map(1 : wfn.ngk[k_idx]) do G′_idx
-        G_plus_G′_idx = find_G_plus_G′(wfn, k_idx, k_plus_q_idx, G_idx, G′_idx)
+        G_plus_G′_idx = G_plus_G′_indices[G′_idx]
+
         if G_plus_G′_idx == -1
-            return 0.0 + 0.0im
+            return zero_nn′ 
         end
-        
+         
         sum(map(1:2) do σ_idx
-            c_nk_plus_q_Gσ[G_plus_G′_idx, σ_idx, :]' * c_n′k_Gσ[G′_idx, σ_idx, :]
+            conj(c_nk_plus_q_Gσ[G_plus_G′_idx, σ_idx, :]) * transpose(c_n′k_Gσ[G′_idx, σ_idx, :]) 
         end)
     end)
 end
