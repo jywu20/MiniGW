@@ -25,6 +25,22 @@ function find_in_grid(grid::AbstractMatrix, vec::AbstractVector; tol = 1e-10)
     return -1
 end
 
+function find_in_grid(grid::Matrix{I}, vec::Vector{I}) where {I <: Integer}
+    n_vecs = size(grid)[2]
+    
+    if size(grid)[1] != length(vec)
+        throw("Dimension mismatch: the grid contains $(size(grid)[1])-dimensional vectors while vec is $(length(vec))-dimensional.")
+    end
+    
+    for idx_vec in 1 : n_vecs
+        if grid[:, idx_vec] == vec
+            return idx_vec
+        end
+    end
+
+    return -1
+end
+
 """
 Move a number to the "1BZ" near zero, 
 assuming that x is equivalent to x + 1.
@@ -89,10 +105,12 @@ This function is designed for 1BZ expansion so things like fractional translatio
 function expand_sym_reduced_grid(grid::AbstractMatrix, operations::AbstractVector; tol = 1e-10)
     n_vecs = size(grid)[2]
     results = AbstractVector[]
+    full_to_irreducible = Int[] 
     
-    for i in 1 : n_vecs
-        current_vec = grid[:, i]
+    for idx_k_irreducible in 1 : n_vecs
+        current_vec = grid[:, idx_k_irreducible]
         push!(results, current_vec)
+        push!(full_to_irreducible, idx_k_irreducible)
 
         for op in operations
             vec_after_sym = op * current_vec
@@ -107,11 +125,12 @@ function expand_sym_reduced_grid(grid::AbstractMatrix, operations::AbstractVecto
             
             if ! found_duplicate
                 push!(results, vec_after_sym)
+                push!(full_to_irreducible, idx_k_irreducible)
             end
         end
     end
     
-    hcat(results...)
+    hcat(results...), full_to_irreducible
 end
 
 function equivalent_vectors(v1::AbstractVector, v2::AbstractVector; tol = 1e-10)
@@ -121,3 +140,17 @@ end
 function equivalent_periodic_vectors(v1::AbstractVector, v2::AbstractVector; tol = 1e-10)
     norm(wigner_seitz.(v1 - v2)) <= tol  
 end
+
+#region Wave function analysis tools 
+
+export top_n_positions
+
+function top_n_positions(vec::AbstractVector, n::Integer)
+    partialsortperm(abs.(vec), 1 : n, rev = true)
+end
+
+function main_components(ψ::AbstractArray, n::Integer)
+    ψ[top_n_positions(ψ, n)]
+end
+
+#endregion 

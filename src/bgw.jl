@@ -5,7 +5,7 @@ export Ry_BGW,
     BerkeleyGWSpinorWaveFunction,
     read_wavefunction,
     read_wavefunctions, 
-    transition_matrix_def
+    transition_matrix_irreducible_1BZ_def
 
 const Ry_BGW =  13.6056925
 
@@ -15,6 +15,7 @@ struct BerkeleyGWSpinorWaveFunction <: AbstractGWWaveFunction
     nrk::Int
     irreducible_1BZ::Matrix{Float64}
     full_1BZ::Matrix{Float64}
+    full_to_irreducible::Vector{Int}
     el::Matrix{Float64}
 
     gk_ranges::Vector{UnitRange} 
@@ -38,7 +39,8 @@ function BerkeleyGWSpinorWaveFunction(fid::HDF5.File; tol_sym = 1e-6)
     rk = fid["mf_header/kpoints/rk"] |> read
     
     ntran = fid["mf_header/symmetry/ntran"] |> read
-    full_1BZ = expand_sym_reduced_grid(rk, map(1 : ntran) do sym_idx
+    full_1BZ, full_to_irreducible = 
+    expand_sym_reduced_grid(rk, map(1 : ntran) do sym_idx
         fid["mf_header/symmetry/mtrx"][:, :, sym_idx]
     end, tol = tol_sym)
     
@@ -53,6 +55,7 @@ function BerkeleyGWSpinorWaveFunction(fid::HDF5.File; tol_sym = 1e-6)
         gk_ending_points[kpt] + 1 : gk_ending_points[kpt + 1]
     end
     
+    # Finding G vectors for each k point 
     gvecs_original_form = fid["wfns/gvecs"] |> read
     gvecs = Vector{Matrix{Float64}}(undef, nrk)
     for k_idx in 1 : nrk
@@ -60,7 +63,7 @@ function BerkeleyGWSpinorWaveFunction(fid::HDF5.File; tol_sym = 1e-6)
     end
     
     BerkeleyGWSpinorWaveFunction(fid, 
-        nrk, rk, full_1BZ, 
+        nrk, rk, full_1BZ, full_to_irreducible,
         el, 
         gk_ranges, ngk, ngkmax, gvecs)
 end
@@ -150,17 +153,13 @@ end
 """
 `q_idx` is assumed to be the index in `wfn.irreducible`; 
 some optimization may be done here.
-
-TODO: this is actually wrong - 
-at this or that point, 
-we will need to consider the possibility that 
-k and q are in the irreducible 1BZ 
-but k + q is not.
 """
-function find_k_plus_q(wfn::BerkeleyGWSpinorWaveFunction, k_idx, q_idx)
+function find_k_plus_q_irreducible_1BZ(wfn::BerkeleyGWSpinorWaveFunction, k_idx, q_idx)
     irreducible_1BZ = wfn.irreducible_1BZ
+    full_1BZ = wfn.full_1BZ
     k_plus_q =  irreducible_1BZ[:, k_idx] + irreducible_1BZ[:, q_idx]
-    find_in_periodic_grid(irreducible_1BZ, k_plus_q)
+    k_plus_q_in_full_1BZ = find_in_periodic_grid(full_1BZ, k_plus_q)
+    wfn.full_to_irreducible[k_plus_q_in_full_1BZ]
 end
 
 """
@@ -186,10 +185,10 @@ The most naive implementation of the transition matrix M_nn'(k, q, G).
 
 TODO: testing 
 """
-function transition_matrix_def(wfn::BerkeleyGWSpinorWaveFunction, 
+function transition_matrix_irreducible_1BZ_def(wfn::BerkeleyGWSpinorWaveFunction, 
     n, n′, k_idx, q_idx, G_idx)
     
-    k_plus_q_idx = find_k_plus_q(wfn, k_idx, q_idx)
+    k_plus_q_idx = find_k_plus_q_irreducible_1BZ(wfn, k_idx, q_idx)
     
     c_n′k_Gσ       = read_wavefunction(wfn, n′, k_idx)
     c_nk_plus_q_Gσ = read_wavefunction(wfn, n, k_plus_q_idx)
@@ -198,6 +197,29 @@ function transition_matrix_def(wfn::BerkeleyGWSpinorWaveFunction,
         G_plus_G′_idx = find_G_plus_G′(wfn, k_idx, k_plus_q_idx, G_idx, G′_idx)
         if G_plus_G′_idx == -1
             return 0.0
+        end
+        
+        sum(map(1:2) do σ_idx
+            c_nk_plus_q_Gσ[G_plus_G′_idx, σ_idx, :]' * c_n′k_Gσ[G′_idx, σ_idx, :]
+        end)
+    end)
+end
+
+"""
+Some acceleration added. 
+"""
+function transition_matrix_irreducible_1BZ(wfn::BerkeleyGWSpinorWaveFunction, 
+    n, n′, k_idx, q_idx, G_idx)
+    
+    k_plus_q_idx = find_k_plus_q_irreducible_1BZ(wfn, k_idx, q_idx)
+    
+    c_n′k_Gσ       = read_wavefunction(wfn, n′, k_idx)
+    c_nk_plus_q_Gσ = read_wavefunction(wfn, n, k_plus_q_idx)
+
+    sum(map(1 : wfn.ngk[k_idx]) do G′_idx
+        G_plus_G′_idx = find_G_plus_G′(wfn, k_idx, k_plus_q_idx, G_idx, G′_idx)
+        if G_plus_G′_idx == -1
+            return 0.0 + 0.0im
         end
         
         sum(map(1:2) do σ_idx

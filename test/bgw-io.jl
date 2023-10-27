@@ -30,7 +30,7 @@ end
 @testset "BerkeleyGW: lattice vector arithmetics" begin
     wfn = BerkeleyGWSpinorWaveFunction("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
     @test equivalent_vectors(
-        wfn.irreducible_1BZ[:, MiniGW.find_k_plus_q(wfn, 1, 2)],
+        wfn.irreducible_1BZ[:, MiniGW.find_k_plus_q_irreducible_1BZ(wfn, 1, 2)],
         wfn.irreducible_1BZ[:, 1] + wfn.irreducible_1BZ[:, 2]
     ) 
 

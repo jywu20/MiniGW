@@ -2,6 +2,7 @@ module MiniGW
     using HDF5
     using StaticArrays
     using LinearAlgebra
+    using Base.Threads
     
     export AbstractGWWaveFunction
 
