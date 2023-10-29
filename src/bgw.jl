@@ -1,12 +1,13 @@
-######################################################################
-#region IO
-
 export Ry_BGW, 
     BerkeleyGWSpinorWaveFunction,
+    G_vec,
     read_wavefunction,
     read_wavefunctions, 
     transition_matrix_irreducible_1BZ_def,
     transition_matrix_irreducible_1BZ
+
+######################################################################
+#region IO
 
 const Ry_BGW =  13.6056925
 
@@ -23,6 +24,7 @@ struct BerkeleyGWSpinorWaveFunction <: AbstractGWWaveFunction
     ngk::Vector{Int} 
     ngkmax::Int
     gvecs::Vector{Matrix{Int}}
+    gvecs_list::Vector{Vector{SVector{3, Int}}}
 end
 
 function BerkeleyGWSpinorWaveFunction(fid::HDF5.File; tol_sym = 1e-6)
@@ -58,15 +60,18 @@ function BerkeleyGWSpinorWaveFunction(fid::HDF5.File; tol_sym = 1e-6)
     
     # Finding G vectors for each k point 
     gvecs_original_form = fid["wfns/gvecs"] |> read
-    gvecs = Vector{Matrix{Float64}}(undef, nrk)
+    gvecs = Vector{Matrix{Int}}(undef, nrk)
+    gvecs_list = Vector{Vector{Vector{Int}}}(undef, nrk)
     for k_idx in 1 : nrk
         gvecs[k_idx] = gvecs_original_form[:, gk_ranges[k_idx]]
+        gvecs_list[k_idx] = grid_to_list(gvecs[k_idx])
     end
     
     BerkeleyGWSpinorWaveFunction(fid, 
         nrk, rk, full_1BZ, full_to_irreducible,
         el, 
-        gk_ranges, ngk, ngkmax, gvecs)
+        gk_ranges, ngk, ngkmax, 
+        gvecs, gvecs_list)
 end
 
 function BerkeleyGWSpinorWaveFunction(path::AbstractString; allow_write = false)
@@ -150,7 +155,17 @@ end
 ######################################################################
 
 ######################################################################
-#region Transition matrix 
+#region k-points and G points 
+
+function G_vec_def(wfn::BerkeleyGWSpinorWaveFunction, k_idx, G_idx)
+    wfn.gvecs[k_idx][:, G_idx]
+end
+
+function G_vec_list(wfn::BerkeleyGWSpinorWaveFunction, k_idx, G_idx)
+    wfn.gvecs_list[k_idx][G_idx]
+end
+
+G_vec = G_vec_list
 
 """
 `q_idx` is assumed to be the index in `wfn.irreducible`; 
@@ -173,14 +188,77 @@ so we assume that in the G grid of `k_idx` and the G grid of `k_plus_q`,
 `G′_idx` is an index in the G grid of `k_idx`.
 Some optimization may be done here.
 """
-function find_G_plus_G′(wfn::BerkeleyGWSpinorWaveFunction, k_idx, k_plus_q_idx, G_idx, G′_idx)
-    G_grid_of_k = wfn.gvecs[k_idx] 
+function find_G_plus_G′_def(wfn::BerkeleyGWSpinorWaveFunction, k_idx, k_plus_q_idx, G_idx, G′_idx)
     G_grid_of_k_plus_q = wfn.gvecs[k_plus_q_idx]
-
-    G  = G_grid_of_k[:, G_idx]
-    G′ = G_grid_of_k[:, G′_idx]
+    G  = G_vec(wfn, k_idx, G_idx) 
+    G′ = G_vec(wfn, k_idx, G′_idx) 
     find_in_grid(G_grid_of_k_plus_q, G + G′)
 end
+
+function find_G_plus_G′(wfn::BerkeleyGWSpinorWaveFunction, k_idx, k_plus_q_idx, G_idx, G′_idx)
+    G_grid_of_k_plus_q = wfn.gvecs_list[k_plus_q_idx]
+    G  = G_vec(wfn, k_idx, G_idx) 
+    G′ = G_vec(wfn, k_idx, G′_idx) 
+    find_in_list(G_grid_of_k_plus_q, G + G′)
+end
+
+function indices_of_G_plus_G′_def(wfn::BerkeleyGWSpinorWaveFunction, 
+    k_idx, q_idx, G_idx)
+    k_plus_q_idx = find_k_plus_q_irreducible_1BZ(wfn, k_idx, q_idx)
+    
+    # Since G′ is confined in the G grid of k, 
+    # the number of G + G′, once G is given, 
+    # is the same as the size of the G grid of k.
+    G_plus_G′_indices = zeros(Int, wfn.ngk[k_idx])
+
+    for G′_idx in 1 : wfn.ngk[k_idx]
+        G_plus_G′_indices[G′_idx] = 
+            find_G_plus_G′(wfn, k_idx, k_plus_q_idx, G_idx, G′_idx)
+    end
+    
+    G_plus_G′_indices
+end
+
+"""
+Return an array with the same size of the G grid of `k_idx`,
+which is the range of G′; 
+the `G′_idx`-th element of the return value 
+is the index of G+G′ in the G grid of k+q.
+"""
+indices_of_G_plus_G′ = indices_of_G_plus_G′_def
+# The implementation below seems to also have performance problem:
+#function indices_of_G_plus_G′(wfn::BerkeleyGWSpinorWaveFunction, k_idx, k_plus_q_idx, G_idx)
+#    G_grid_of_k = wfn.gvecs[k_idx] 
+#    G_grid_of_k_plus_q = wfn.gvecs[k_plus_q_idx]
+#
+#    G = G_grid_of_k[:, G_idx]
+#    # By default the return value is -1
+#    G_plus_G′_grid = -ones(wfn.ngk[k_plus_q_idx])
+#    possible_G_plus_G′_indices = 1 : wfn.ngk[k_plus_q_idx]
+#    existing_G_plus_G′_indices = Set{Int}()
+#    
+#    for G′_idx in 1 : wfn.ngk[k_idx]
+#        G′ = G_grid_of_k[:, G′_idx]
+#        for possible_G_plus_G′_idx in possible_G_plus_G′_indices
+#            if possible_G_plus_G′_idx in existing_G_plus_G′_indices
+#                continue
+#            end
+#
+#            if G + G′ == G_grid_of_k_plus_q[:, possible_G_plus_G′_idx]
+#                G_plus_G′_grid[G′_idx] = possible_G_plus_G′_idx
+#                push!(existing_G_plus_G′_indices, possible_G_plus_G′_idx)
+#            end
+#        end
+#    end
+#
+#    G_plus_G′_grid 
+#end
+
+#endregion
+######################################################################
+
+######################################################################
+#region Transition matrix 
 
 """
 The most naive implementation of the transition matrix M_nn'(k, q, G).
@@ -204,23 +282,6 @@ function transition_matrix_irreducible_1BZ_def(wfn::BerkeleyGWSpinorWaveFunction
             c_nk_plus_q_Gσ[G_plus_G′_idx, σ_idx, :]' * c_n′k_Gσ[G′_idx, σ_idx, :]
         end)
     end)
-end
-
-function indices_of_G_plus_G′(wfn::BerkeleyGWSpinorWaveFunction, 
-    k_idx, q_idx, G_idx)
-    k_plus_q_idx = find_k_plus_q_irreducible_1BZ(wfn, k_idx, q_idx)
-    
-    # Since G′ is confined in the G grid of k, 
-    # the number of G + G′, once G is given, 
-    # is the same as the size of the G grid of k.
-    G_plus_G′_indices = zeros(Int, wfn.ngk[k_idx])
-
-    for G′_idx in 1 : wfn.ngk[k_idx]
-        G_plus_G′_indices[G′_idx] = 
-            find_G_plus_G′(wfn, k_idx, k_plus_q_idx, G_idx, G′_idx)
-    end
-    
-    G_plus_G′_indices
 end
 
 """

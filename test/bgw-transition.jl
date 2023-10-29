@@ -17,13 +17,30 @@ using ProgressMeter
     @test isapprox(M_nn′_kqG, 1.0)
 end
 
-"""
-Here we only compare the accelerated version 
-with the original version; 
-if the latter is wrong, 
-    then the former is wrong as well, 
-    but in a way consistent with the latter.
-"""
+# The following test was intended for testing the consistency between G_plus_G′_indices 
+# and G_plus_G′_indices_def, but it seems the implementation of G_plus_G′_indices 
+# isn't the main performance issue
+#@testset "BerkeleyGW: accelerated G+G′ finder is consistent with definition" begin
+#    wfn = BerkeleyGWSpinorWaveFunction("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
+#    k_idx = 3
+#    q_idx = 10 
+#    G_idx = 1000 
+#    
+#    k_plus_q_idx = MiniGW.find_k_plus_q_irreducible_1BZ(wfn, k_idx, q_idx)
+#    
+#    println("Time cost of the naive G+G′ finder:")
+#    G_plus_G′_indices_def = @time MiniGW.indices_of_G_plus_G′_def(wfn, k_idx, k_plus_q_idx, G_idx)
+#    println("Time cost of the slightly accelerated G+G′ finder:")
+#    G_plus_G′_indices = @time MiniGW.indices_of_G_plus_G′(wfn, k_idx, q_idx, G_idx)
+#    
+#    @test G_plus_G′_indices == G_plus_G′_indices_def
+#end
+
+# Here we only compare the accelerated version 
+# with the original version; 
+# if the latter is wrong, 
+# then the former is wrong as well, 
+# but in a way consistent with the latter.
 @testset "BerkeleyGW: accelerated transition matrix: consistency with the definition" begin
     wfn = BerkeleyGWSpinorWaveFunction("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
     n_range = 117:120

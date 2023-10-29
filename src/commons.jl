@@ -3,6 +3,13 @@ export find_in_grid, wigner_seitz, find_in_periodic_grid,
     equivalent_vectors,
     expand_sym_reduced_grid
 
+function grid_to_list(grid::AbstractMatrix)
+    n_vecs = size(grid)[2]
+    map(1 : n_vecs) do vec_idx
+        grid[:, vec_idx]
+    end
+end
+
 """
 Find `vec` in `grid`. The return value is the position of `vec` in `grid`.
 `grid[:, 1]` is the first vector it contains, and so on.
@@ -25,7 +32,15 @@ function find_in_grid(grid::AbstractMatrix, vec::AbstractVector; tol = 1e-10)
     return -1
 end
 
-function find_in_grid(grid::Matrix{I}, vec::Vector{I}) where {I <: Integer}
+function find_in_list(list::AbstractVector, vec::AbstractVector{I}) where {I <: Integer}
+    res = findfirst(x -> x == vec, list)
+    if res === nothing
+        return -1
+    end
+    res
+end
+
+function find_in_grid(grid::Matrix{I}, vec::AbstractVector{I}) where {I <: Integer}
     n_vecs = size(grid)[2]
     
     if size(grid)[1] != length(vec)

@@ -40,8 +40,39 @@ end
         G′_idx = 100
 
         @test equivalent_vectors(
-            wfn.gvecs[k_idx][:, G_idx] + wfn.gvecs[k_idx][:, G′_idx],
-            wfn.gvecs[k_plus_q_idx][:, MiniGW.find_G_plus_G′(wfn, k_idx, k_plus_q_idx, G_idx, G′_idx)]
+            G_vec(wfn, k_idx, G_idx) + G_vec(wfn, k_idx, G′_idx),
+            G_vec(wfn, k_plus_q_idx, MiniGW.find_G_plus_G′(wfn, k_idx, k_plus_q_idx, G_idx, G′_idx))
         ) 
     end
+end
+
+# Finding whether G_vec and G_vec_def are consistent 
+@testset "BerkeleyGW: finding G vectors" begin
+    wfn = BerkeleyGWSpinorWaveFunction("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
+    k_idx = 120 
+    for G_idx in 1 : wfn.ngk[k_idx]
+        @test G_vec(wfn, k_idx, G_idx) == MiniGW.G_vec_def(wfn, k_idx, G_idx)
+    end
+    
+    println("Time cost of G_vec:")
+    @time for G_idx in 1 : wfn.ngk[k_idx]
+        G_vec(wfn, k_idx, G_idx)
+    end
+
+    println("Time cost of G_vec_def:")
+    @time for G_idx in 1 : wfn.ngk[k_idx]
+        MiniGW.G_vec_def(wfn, k_idx, G_idx)
+    end
+end
+
+# Finding whether find_G_plus_G′ and find_G_plus_G′_def
+# are consistent 
+@testset "BerkeleyGW: finding G plus G′" begin
+    wfn = BerkeleyGWSpinorWaveFunction("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
+    k_idx = 120 
+    k_plus_q_idx = 87
+    G′_idx = 145
+    G_idx = 2000
+    @test MiniGW.find_G_plus_G′(wfn, k_idx, k_plus_q_idx, G_idx, G′_idx) == 
+            MiniGW.find_G_plus_G′_def(wfn, k_idx, k_plus_q_idx, G_idx, G′_idx)
 end
