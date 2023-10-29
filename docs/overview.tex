@@ -178,7 +178,7 @@ What a splendid equation system!
 \textbf{In practice\dots we always use GPP} $\epsilon(\omega)$ is assumed to be 
 plasmon model-like, so -- we feed 
 \begin{equation}
-    \chi_{\vb*{G} \vb*{G}'}(\vb*{q}, \omega)
+    \chi_{\vb*{G} \vb*{G}'}(\vb*{q}, \omega=0)
     = \sum_{\vb*{k}} \sum_{n}^{\text{occ}} \sum_{n'}^{\text{emp}} 
     M_{n n'} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'} (\vb*{k}, \vb*{q}, \vb*{G}') 
     \frac{
@@ -351,7 +351,7 @@ Thus
 \textbf{Procedure}
 \begin{enumerate}
     \item find index of $\vb*{k}$
-    \item find the index of $\vb*{G} + \vb*{G}'$ in $\vb*{G}$-grid of $\vb*{k} + \vb*{q}$,
+    \item find index of $\vb*{G} + \vb*{G}'$ in $\vb*{G}$-grid of $\vb*{k} + \vb*{q}$,
     for each $\vb*{G}'$ in $\vb*{G}$-grid of $\vb*{k}$
     \item do summation $\sum_{\vb*{G}', \sigma} c^*_{n \vb*{k} + \vb*{q}, \vb*{G} + \vb*{G}' \sigma} c_{n \vb*{k}, \vb*{G}' \sigma}$.
 \end{enumerate}    
