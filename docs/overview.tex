@@ -259,7 +259,7 @@ In RHS $E_{\text{emp}}$ is replaced by the average energy.
 \end{center}
 
 \textbf{Example} High-energy DFT bands of \ce{WTe2} monolayer 
-(\SI{80}{Ry}, $20 \times 20 \times 1$ grid). 
+(ONCV-SG15, 120 electrons; \SI{80}{Ry} cutoff, $20 \times 20 \times 1$ grid). 
 $x$ axis = $\vb*{k}$ index in irreducible 1BZ; 
 fastest varying coordinate = $k_y$ 
 
@@ -279,7 +279,7 @@ fastest varying coordinate = $k_y$
 \end{center}
 
 \textbf{Example} High-energy DFT bands of \ce{WTe2} monolayer 
-(\SI{80}{Ry}, $20 \times 20 \times 1$ grid). 
+(ONCV-SG15, 120 electrons; \SI{80}{Ry} cutoff, $20 \times 20 \times 1$ grid). 
 $x$ axis = $\vb*{k}$ index in irreducible 1BZ; 
 fastest varying coordinate = $k_y$ 
 
@@ -417,6 +417,16 @@ $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn
 
 \framebreak
 
+\textbf{Case 1: $\vb*{G} = \vb*{G}'$}  In this case $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'} (\vb*{k}, \vb*{q}, \vb*{G}')$ is large and fairly diagonal
+
+\begin{center}
+    \includegraphics[width=0.6\textwidth]{../data/chi/nc_range-121-150-k_idx-2-q_idx-3-G_idx-100.png}
+\end{center}
+
+Strikingly, $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'} (\vb*{k}, \vb*{q}, \vb*{G}')$ is still very diagonal for bands near Fermi surface!
+
+\framebreak
+
 \textbf{Case 2: $\vb*{G} \neq \vb*{G}'$} $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'} (\vb*{k}, \vb*{q}, \vb*{G}')$ is very non-diagonal, 
 but since the terms's random phases cancel each other so it's small
 
@@ -429,8 +439,16 @@ but since the terms's random phases cancel each other so it's small
 \begin{frame}
 \frametitle{Half-way generalization about \shortcode{pseudobands} in $\chi$}
 
-\faHandPointRight \shortcode{pseudobands} works  
-when it has to work
+\begin{itemize}
+    \item[\faHandPointRight] \shortcode{pseudobands} works  
+    when it's necessary to do so 
+    \item[\faHandPointRight] What prevents \shortcode{pseudobands} from working 
+    around Fermi surface is the energy dispersion
+\end{itemize}
+
+\vspace{0.5cm}
+
+\dots but do we have any theoretical explanation for this?
 
 \end{frame}
 
