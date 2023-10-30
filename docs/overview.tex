@@ -82,6 +82,9 @@
 
 %Remove navigation symbols
 \setbeamertemplate{navigation symbols}{}
+%Remove frame continuation numbering
+\setbeamertemplate{frametitle continuation}{}
+
 
 %Information to be included in the title page:
 \title{Details in $GW$-BSE}
@@ -175,7 +178,7 @@ What a splendid equation system!
 \textbf{In practice\dots we always use GPP} $\epsilon(\omega)$ is assumed to be 
 plasmon model-like, so -- we feed 
 \begin{equation}
-    \chi_{\vb*{G} \vb*{G}'}(\vb*{q}, \omega)
+    \chi_{\vb*{G} \vb*{G}'}(\vb*{q}, \omega=0)
     = \sum_{\vb*{k}} \sum_{n}^{\text{occ}} \sum_{n'}^{\text{emp}} 
     M_{n n'} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'} (\vb*{k}, \vb*{q}, \vb*{G}') 
     \frac{
@@ -250,7 +253,43 @@ In RHS $E_{\text{emp}}$ is replaced by the average energy.
 
 \framebreak
 
-TODO: $E_c - E_v$ plot
+\begin{center}
+    \includegraphics[width=0.45\textwidth]{../data/energy/energies-different-blocks.png}
+    \includegraphics[width=0.45\textwidth]{../data/energy/energies-same-blocks-1062.png}
+\end{center}
+
+\textbf{Example} High-energy DFT bands of \ce{WTe2} monolayer 
+(ONCV-SG15, 120 electrons; \SI{80}{Ry} cutoff, $20 \times 20 \times 1$ grid). 
+$x$ axis = $\vb*{k}$ index in irreducible 1BZ; 
+fastest varying coordinate = $k_y$ 
+
+\vspace{0.5cm}
+
+\begin{itemize}
+    \item[\faHandPointRight] Bands above 1000 are generally flat (but dispersion $\uparrow$ as $n$ $\uparrow$)
+    \item[\faHandPointRight] Low-lying pseudobands blocks are very close in energy 
+    (but $1 / (E_{\text{emp}} - E_{\text{occ}})$ more sensitive to dispersion)
+\end{itemize}
+
+\framebreak
+
+\begin{center}
+    \includegraphics[width=0.45\textwidth]{../data/energy/energies-different-blocks.png}
+    \includegraphics[width=0.45\textwidth]{../data/energy/energies-same-blocks-4000.png}
+\end{center}
+
+\textbf{Example} High-energy DFT bands of \ce{WTe2} monolayer 
+(ONCV-SG15, 120 electrons; \SI{80}{Ry} cutoff, $20 \times 20 \times 1$ grid). 
+$x$ axis = $\vb*{k}$ index in irreducible 1BZ; 
+fastest varying coordinate = $k_y$ 
+
+\vspace{0.5cm}
+
+\begin{itemize}
+    \item[\faHandPointRight] Bands above 1000 are generally flat (but dispersion $\uparrow$ as $n$ $\uparrow$)
+    \item[\faHandPointRight] High-energy blocks are more dispersive 
+    (but $1 / (E_{\text{emp}} - E_{\text{occ}})$ is smaller so no worry)
+\end{itemize}
 
 \end{frame}
 
@@ -312,13 +351,15 @@ Thus
 \textbf{Procedure}
 \begin{enumerate}
     \item find index of $\vb*{k}$
-    \item find the index of $\vb*{G} + \vb*{G}'$ in $\vb*{G}$-grid of $\vb*{k} + \vb*{q}$,
+    \item find index of $\vb*{G} + \vb*{G}'$ in $\vb*{G}$-grid of $\vb*{k} + \vb*{q}$,
     for each $\vb*{G}'$ in $\vb*{G}$-grid of $\vb*{k}$
     \item do summation $\sum_{\vb*{G}', \sigma} c^*_{n \vb*{k} + \vb*{q}, \vb*{G} + \vb*{G}' \sigma} c_{n \vb*{k}, \vb*{G}' \sigma}$.
 \end{enumerate}    
 
-\textbf{Performance} The main bottleneck: the finding $\vb*{G} + \vb*{G}'$ step.
-TODO: profiler
+\vspace{0.5cm}
+
+\textbf{Performance} Main bottleneck: finding $\vb*{G} + \vb*{G}'$.
+Using \shortcode{StaticArrays.jl} helps a lot! 
 
 \end{frame}
 
@@ -344,11 +385,70 @@ Under GPP:
 
 \vspace{0.5cm}
 
-\textbf{Our goal} \emph{How diagonal is}
+\textbf{Our goal} \emph{Finding how diagonal is}
 \begin{equation}
     \sum_{n}^{\text{occ}} 
         M_{n n'} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'} (\vb*{k}, \vb*{q}, \vb*{G}') 
 \end{equation}
+
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+\frametitle{Numerical charaterization of 
+$\scriptstyle \sum_{n}^{\text{occ}} M_{n n'} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'} (\vb*{k}, \vb*{q}, \vb*{G}') $}
+
+\textbf{Case 1: $\vb*{G} = \vb*{G}'$}  In this case $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'} (\vb*{k}, \vb*{q}, \vb*{G}')$ is large and fairly diagonal
+
+\begin{center}
+    \includegraphics[width=0.6\textwidth]{../data/chi/nc_range-1951-2000-k_idx-1-q_idx-1-G_idx-810.png}
+\end{center}
+
+\textbf{Parameters} $\vb*{G} = (0, 1, -14), \vb*{k} = \vb*{k}_2 = (0, 0.00, 0), \vb*{q} = (0, 0.00, 0)$
+
+\framebreak
+
+\textbf{Case 1: $\vb*{G} = \vb*{G}'$}  In this case $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'} (\vb*{k}, \vb*{q}, \vb*{G}')$ is large and fairly diagonal
+
+\begin{center}
+    \includegraphics[width=0.6\textwidth]{../data/chi/nc_range-1951-2000-k_idx-2-q_idx-3-G_idx-810.png}
+\end{center}
+
+\textbf{Parameters} $\vb*{G} = (0, 1, -14), \vb*{k} = \vb*{k}_2 = (0, 0.05, 0), \vb*{q} = (0, 0.10, 0)$
+
+\framebreak
+
+\textbf{Case 1: $\vb*{G} = \vb*{G}'$}  In this case $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'} (\vb*{k}, \vb*{q}, \vb*{G}')$ is large and fairly diagonal
+
+\begin{center}
+    \includegraphics[width=0.6\textwidth]{../data/chi/nc_range-121-150-k_idx-2-q_idx-3-G_idx-100.png}
+\end{center}
+
+Strikingly, $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'} (\vb*{k}, \vb*{q}, \vb*{G}')$ is still very diagonal for bands near Fermi surface!
+
+\framebreak
+
+\textbf{Case 2: $\vb*{G} \neq \vb*{G}'$} $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'} (\vb*{k}, \vb*{q}, \vb*{G}')$ is very non-diagonal, 
+but since the terms's random phases cancel each other so it's small
+
+\begin{center}
+    \includegraphics[width=0.6\textwidth]{../data/chi/nc_range-3939-4000-k_idx-2-q_idx-3-G1_idx-2000-G2_idx-2001.png}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Half-way generalization about \shortcode{pseudobands} in $\chi$}
+
+\begin{itemize}
+    \item[\faHandPointRight] \shortcode{pseudobands} works  
+    when it's necessary to do so 
+    \item[\faHandPointRight] What prevents \shortcode{pseudobands} from working 
+    around Fermi surface is the energy dispersion
+\end{itemize}
+
+\vspace{0.5cm}
+
+\dots but do we have any theoretical explanation for this?
 
 \end{frame}
 
