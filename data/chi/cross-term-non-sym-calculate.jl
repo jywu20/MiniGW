@@ -2,15 +2,15 @@ using LinearAlgebra
 using Test
 using ProgressMeter
 using Plots
-include("../src/MiniGW.jl")
+include("../../src/MiniGW.jl")
 using .MiniGW
 
 wfn = BerkeleyGWSpinorWaveFunction("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
 
 n_range = 1:120
-n′_range = 3939:4000
-G_idx = 100 
-G′_idx = 110
+n′_range = 1951:2000
+G_idx = 810 
+G′_idx = 1000 
 k_idx = 2
 q_idx = 3
 
@@ -54,4 +54,18 @@ begin
         
         println("With pseudobands    : $χ_pb")
     end
+end
+
+let p = heatmap(
+    n′_range, n′_range, 
+    real.(M_nn′_G' * M_nn′_G′), 
+    aspect_ratio = :equal,
+    dpi = 500)
+    
+    plot_range = (0.5 + first(n′_range), 0.5 + last(n′_range))
+    xlims!(p, plot_range)
+    ylims!(p, plot_range)
+    savefig(p, 
+        "nc_range-$(first(n′_range))-$(last(n′_range))-k_idx-$k_idx-q_idx-$q_idx-G1_idx-$G_idx-G2_idx-$G′_idx-real-part.png")
+    p
 end

@@ -2,7 +2,7 @@ using LinearAlgebra
 using Test
 using ProgressMeter
 using Plots
-include("../src/MiniGW.jl")
+include("../../src/MiniGW.jl")
 using .MiniGW
 
 wfn = BerkeleyGWSpinorWaveFunction("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
