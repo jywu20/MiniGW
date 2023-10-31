@@ -7,8 +7,8 @@ using .MiniGW
 
 wfn = BerkeleyGWSpinorWaveFunction("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
 
-n_range = 1:120
-n′_range = 2000:2500
+n_range = 60:120
+n′_range = 2000:2100
 G_idx = 200 
 k_idx = 12 
 q_idx = 37
