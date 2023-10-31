@@ -123,13 +123,13 @@
 
 \textbf{Assuming quasiparticles\dots} 
 $\scriptstyle v(\vb*{q} + \vb*{G}) = \frac{4\pi }{V \abs*{\vb*{q} + \vb*{G}}^2}$.
-$\scriptstyle \Sigma \stackrel{\int_{\text{contour}}}{=} \Sigma^{\text{COH}} + \Sigma^{\text{SEX}}$,
+$\scriptstyle \Sigma \stackrel{\int_{\text{contour}}}{=} \Sigma^{\text{CH}} + \Sigma^{\text{SX}}$,
 $\scriptstyle \epsilon_{\vb*{G} \vb*{G}'}(\vb*{q}, \omega) = \delta_{\vb*{G} \vb*{G}'} - v(q + \vb*{G}) \chi_{\vb*{G} \vb*{G}'}(\vb*{q}, \omega)$, 
 $\scriptstyle M_{n n'}(\vb*{k}, \vb*{q}, \vb*{G}) = \mel*{n \vb*{k} + \vb*{q}}{\ee^{\ii (\vb*{q} + \vb*{G}) \cdot \vb*{r}}}{n' \vb*{k}}$
 \begin{equation}
     \scriptsize
     \begin{aligned}
-    \mel{n \vb*{k}}{\Sigma^{\text{SEX}}(\omega)}{n' \vb*{k}} 
+    \mel{n \vb*{k}}{\Sigma^{\text{SX}}(\omega)}{n' \vb*{k}} 
     &= - \sum_{n''}^{\text{occ}} \sum_{\vb*{q} \vb*{G} \vb*{G}'}
     M^*_{n'' n} (\vb*{k}, - \vb*{q}, - \vb*{G}) M_{n'' n'} (\vb*{k}, - \vb*{q},  -\vb*{G}') \\
     &\quad\quad \times  \epsilon^{-1}_{\vb*{G} \vb*{G}'}(\vb*{q}, \omega - E_{n'', \vb*{k} - \vb*{q}}) 
@@ -140,7 +140,7 @@ $\scriptstyle M_{n n'}(\vb*{k}, \vb*{q}, \vb*{G}) = \mel*{n \vb*{k} + \vb*{q}}{\
 \begin{equation}
     \scriptsize
     \begin{aligned}
-        \mel{n \vb*{k}}{\Sigma^{\text{COH}}(\omega)}{n' \vb*{k}} 
+        \mel{n \vb*{k}}{\Sigma^{\text{CH}}(\omega)}{n' \vb*{k}} 
         &= \frac{\ii}{2\pi} \sum_{n''} \sum_{\vb*{q}, \vb*{G}, \vb*{G}'} 
         M^*_{n'' n} (\vb*{k}, - \vb*{q}, - \vb*{G})  M_{n'' n'} (\vb*{k}, - \vb*{q},  -\vb*{G}') \\
         & \times \int_{0}^{\infty} \dd{\omega'} 
@@ -187,7 +187,7 @@ plasmon model-like, so -- we feed
         E_{n, \vb*{k} + \vb*{q}} - E_{n' \vb*{k}} 
     }
 \end{equation}
-to \emph{analytic} expressions of $\Sigma^{\text{COH, SEX}}$.
+to \emph{analytic} expressions of $\Sigma^{\text{CH, SX}}$.
 
 \vspace{1cm}
 
@@ -232,7 +232,7 @@ For $E_{n \vb*{k}} \gg E_{\text{F}}$:
 \textbf{Observation} 
 \begin{itemize}
     \item $\chi \sim M M^* \times \text{some-function}(E_{\text{emp}} - E_{\text{occ}})$;
-    \item $\Sigma^{\text{COH}} \sim M M^* \times \text{some-function}(\omega - E)$; 
+    \item $\Sigma^{\text{CH}} \sim M M^* \times \text{some-function}(\omega - E)$; 
     \item We are only interested in $\omega \sim E_{\text{F}}$.
 \end{itemize}
 
@@ -243,7 +243,7 @@ $\text{energy-dependent factors} \sim \const.$ for all $\vb*{k}$.
 
 \vspace{0.5cm}
 
-Thus for both $\chi$ and $\Sigma^{\text{COH}}$ involving summation over empty bands:
+Thus for both $\chi$ and $\Sigma^{\text{CH}}$ involving summation over empty bands:
 \begin{equation}
     \sum_{n''}^{\text{high emp. bands}} M_{n'' n}^* M_{n'' n'} \times \cdots 
     = \sum_{\text{block $n_{\text{b}}$}} \cdots \times \sum_{n'' \in \text{block $n_{\text{b}}$}}
@@ -388,16 +388,16 @@ Under GPP:
 \textbf{Our goal} \emph{Finding how diagonal is}
 \begin{equation}
     \sum_{n}^{\text{occ}} 
-        M_{n n'} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'} (\vb*{k}, \vb*{q}, \vb*{G}') 
+        M_{n n'_1} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'_2} (\vb*{k}, \vb*{q}, \vb*{G}') 
 \end{equation}
 
 \end{frame}
 
 \begin{frame}[allowframebreaks]
 \frametitle{Numerical charaterization of 
-$\scriptstyle \sum_{n}^{\text{occ}} M_{n n'} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'} (\vb*{k}, \vb*{q}, \vb*{G}') $}
+$\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'_2} (\vb*{k}, \vb*{q}, \vb*{G}') $}
 
-\textbf{Case 1: $\vb*{G} = \vb*{G}'$}  In this case $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'} (\vb*{k}, \vb*{q}, \vb*{G}')$ is large and fairly diagonal
+\textbf{Case 1: $\vb*{G} = \vb*{G}'$}  In this case $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'_2} (\vb*{k}, \vb*{q}, \vb*{G}')$ is large and fairly diagonal
 
 \begin{center}
     \includegraphics[width=0.6\textwidth]{../data/chi/nc_range-1951-2000-k_idx-1-q_idx-1-G_idx-810.png}
@@ -407,7 +407,7 @@ $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn
 
 \framebreak
 
-\textbf{Case 1: $\vb*{G} = \vb*{G}'$}  In this case $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'} (\vb*{k}, \vb*{q}, \vb*{G}')$ is large and fairly diagonal
+\textbf{Case 1: $\vb*{G} = \vb*{G}'$}  In this case $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'_2} (\vb*{k}, \vb*{q}, \vb*{G}')$ is large and fairly diagonal
 
 \begin{center}
     \includegraphics[width=0.6\textwidth]{../data/chi/nc_range-1951-2000-k_idx-2-q_idx-3-G_idx-810.png}
@@ -417,18 +417,18 @@ $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn
 
 \framebreak
 
-\textbf{Case 1: $\vb*{G} = \vb*{G}'$}  In this case $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'} (\vb*{k}, \vb*{q}, \vb*{G}')$ is large and fairly diagonal
+\textbf{Case 1: $\vb*{G} = \vb*{G}'$}  In this case $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'_2} (\vb*{k}, \vb*{q}, \vb*{G}')$ is large and fairly diagonal
 
 \begin{center}
     \includegraphics[width=0.6\textwidth]{../data/chi/nc_range-121-150-k_idx-2-q_idx-3-G_idx-100.png}
 \end{center}
 
-Strikingly, $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'} (\vb*{k}, \vb*{q}, \vb*{G}')$ is still very diagonal for bands near Fermi surface!
+Strikingly, $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'_2} (\vb*{k}, \vb*{q}, \vb*{G}')$ is still very diagonal for bands near Fermi surface!
 
 \framebreak
 
-\textbf{Case 2: $\vb*{G} \neq \vb*{G}'$} $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'} (\vb*{k}, \vb*{q}, \vb*{G}')$ is very non-diagonal, 
-but since the terms's random phases cancel each other so it's small
+\textbf{Case 2: $\vb*{G} \neq \vb*{G}'$} $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'_2} (\vb*{k}, \vb*{q}, \vb*{G}')$ is very non-diagonal, 
+but since the terms's random phases cancel each other so the overall sum after $\sum_{n'}^{\text{emp}}$ is small
 
 \begin{center}
     \includegraphics[width=0.6\textwidth]{../data/chi/nc_range-3939-4000-k_idx-2-q_idx-3-G1_idx-2000-G2_idx-2001.png}
@@ -453,9 +453,58 @@ but since the terms's random phases cancel each other so it's small
 \end{frame}
 
 \begin{frame}
-\frametitle{The secret of }
+\frametitle{Cancellation of cross-terms in $\chi$}
 
-    
+$\scriptstyle M_{n n'_1} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'_2} (\vb*{k}, \vb*{q}, \vb*{G}')$ and $n$ (occupied band index), when $n_1' \neq n_2'$:
+\begin{center}
+    \includegraphics[width=0.6\textwidth]{../data/chi/nc-n1-2000-n2-1000-nv-1-120-k_idx-12-q_idx-37-G_idx-200.png}
+\end{center}
+
+\begin{itemize}
+    \item[\faHandPointRight] Although for a single $n$, the value can be large, 
+    as we sum over $n$ the terms cancel each other $\Rightarrow$
+    diagonal $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'_2} (\vb*{k}, \vb*{q}, \vb*{G}')$ 
+    \item Maybe that's why we need semi-core states?
+\end{itemize}
+
+\end{frame}
+
+
+\section{\shortcode{pseudobands} for $\Sigma$}
+
+\begin{frame}
+\frametitle{$\Sigma^{\text{CH}}$ revisited}
+
+Only $\Sigma^{\text{CH}}$ involves $\sum^{\text{emp}}$:
+\begin{equation}
+    \begin{aligned}
+        \mel*{n \vb*{k}}{\Sigma^{\text{CH, GPP}}}{n' \vb*{k}} 
+        &= \frac{1}{2} \sum_{n''} \sum_{\vb*{q} \vb*{G} \vb*{G}'} M_{n'' n}^*(\vb*{k}, - \vb*{q}, -\vb*{G})
+        M_{n'' n'}(\vb*{k}, - \vb*{q}, - \vb*{G}') \times  \\
+        &\quad \quad \text{something about $\vb*{q}, \vb*{k}, \vb*{G}, \vb*{G}'$}
+    \end{aligned}
+    \label{eq:ch.simple}
+\end{equation}
+
+\textbf{Problems} \begin{itemize}
+    \item No summation over occupied states $\Rightarrow$ 
+    \xmark the aforementioned cancellation mechanism 
+    \item Summation over $\vb*{G}$ very complicated $\Rightarrow$
+    analysis based on $\vb*{G}$ very hard.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Some tentative ideas}
+
+\begin{itemize}
+    \item It has been verified that a single $M_{n''_1 n}^* M_{n''_2 n}$ term is never diagonal
+    \item But it seems naively summing over $\vb*{G}$ (without considering the weight factor)
+    makes it diagonal\dots
+\end{itemize}    
+
+
 
 \end{frame}
 
