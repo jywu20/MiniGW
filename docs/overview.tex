@@ -299,9 +299,13 @@ fastest varying coordinate = $k_y$
 For \shortcode{pseudobands} to work, we need 
 \begin{equation}
     \begin{aligned}
-        \sum_{n'' \in \text{block $n_{\text{b}}$}} M_{n'' n}^* M_{n'' n'} 
+        \underbrace{
+            \sum_{n'' \in \text{block $n_{\text{b}}$}} M_{n'' n}^* M_{n'' n'} 
+        }_{\text{normal}}
         &\sim M_{\text{averaged band}, n}^* M_{\text{averaged band}, n'} \\
-        &= \sum_{n''_1, n''_2 \in \text{block $n_{\text{b}}$}} M_{n_1'' n'} M_{n_2'' n}^*.
+        &= \underbrace{
+            \sum_{n''_1, n''_2 \in \text{block $n_{\text{b}}$}} M_{n_1'' n'} M_{n_2'' n}^*
+        }_{\text{pseudobands}}.
     \end{aligned}
     \label{eq:pseudobands-correct}
 \end{equation}
@@ -390,6 +394,7 @@ Under GPP:
     \sum_{n}^{\text{occ}} 
         M_{n n'_1} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'_2} (\vb*{k}, \vb*{q}, \vb*{G}') 
 \end{equation}
+It should be diagonal for \shortcode{pseudobands} to work.
 
 \end{frame}
 
@@ -495,16 +500,26 @@ Only $\Sigma^{\text{CH}}$ involves $\sum^{\text{emp}}$:
 
 \end{frame}
 
-\begin{frame}
+\begin{frame}[allowframebreaks]
 \frametitle{Some tentative ideas}
 
 \begin{itemize}
     \item It has been verified that a single $M_{n''_1 n}^* M_{n''_2 n}$ term is never diagonal
     \item But it seems naively summing over $\vb*{G}$ (without considering the weight factor)
     makes it diagonal\dots
+    \item When $n_1'' \neq n_2''$ it's no longer diagonal -- 
+        but probably not that important after all?
 \end{itemize}    
 
+\begin{center}
+    \includegraphics[width=0.5\textwidth]{../data/sigma/nc_range-1800-2000-n_idx-120-n_prime_idx_120-k_idx-1-q_idx-1-G_range-200-250.png}
+\end{center}
 
+\begin{itemize}
+    \item $\sum_{\vb*{G}_1, \vb*{G}_2} M_{n''_1 n}^*(\vb*{G}_1) M_{n''_2 n}(\vb*{G}_2)$ is not diagonal at all; 
+    but probably this is not astonishing because how close $\vb*{G}_1$ and $\vb*{G}_2$ are 
+    definitely is important; note the $\Omega_{\vb*{G}_1 \vb*{G}_2}$ factor in $\Sigma^{\text{CH}}$.
+\end{itemize}
 
 \end{frame}
 
