@@ -30,3 +30,13 @@ let n_cs = 3825:3940, n_v = 120
     savefig(p, "energies-same-blocks-$(maximum(n_cs)).png")
     p
 end
+
+let n_cs = [125, 126, collect(1000:1200)...], n_v = 120
+    p = plot(dpi=500, legend = false) 
+    for n_c in n_cs
+        plot!(p, 1 : wfn.nrk, 1 ./ (wfn.el[n_c, :] - wfn.el[n_v, :]), 
+        framestyle = :box,
+    ) 
+    end
+    p
+end

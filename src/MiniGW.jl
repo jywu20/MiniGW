@@ -3,6 +3,7 @@ module MiniGW
     using StaticArrays
     using LinearAlgebra
     using Base.Threads
+    using Statistics
     
     export AbstractGWWaveFunction
 
