@@ -4,7 +4,9 @@ export Ry_BGW,
     read_wavefunction,
     read_wavefunctions, 
     transition_matrix_irreducible_1BZ_def,
-    transition_matrix_irreducible_1BZ
+    transition_matrix_irreducible_1BZ,
+    read_energies,
+    transition_energy
 
 ######################################################################
 #region IO
@@ -321,4 +323,20 @@ function transition_matrix_irreducible_1BZ(wfn::BerkeleyGWSpinorWaveFunction,
 end
 
 #endregion 
+######################################################################
+
+######################################################################
+#region Energies 
+
+function read_energies(wfn::BerkeleyGWSpinorWaveFunction, band_range, kpt_range)
+    wfn.el[band_range, kpt_range]
+end
+
+function transition_energy(wfn::BerkeleyGWSpinorWaveFunction, n, n′, k_idx, q_idx)
+    E_n_k_plus_q = wfn.el[n,  find_k_plus_q_irreducible_1BZ(wfn, k_idx, q_idx)]
+    E_n′_k       = wfn.el[n′, k_idx]
+    E_n_k_plus_q - E_n′_k
+end
+
+#endregion
 ######################################################################
