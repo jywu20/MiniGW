@@ -9,7 +9,7 @@ wfn = BerkeleyGWSpinorWaveFunction("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-
 
 n = 119 
 n′ = 119 
-n′′_range = 1800:2000
+n′′_range = 1800:1880
 G_idx_range = 800:900
 k_idx = 1 
 q_idx = 1
