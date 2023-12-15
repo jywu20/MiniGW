@@ -42,7 +42,7 @@
 
 %region Theme 
 
-\usetheme{metropolis}
+\usetheme{madrid}
 
 % Show section in foot
 \makeatletter
@@ -87,18 +87,24 @@
 
 
 %Information to be included in the title page:
-\title{Why \shortcode{pseudobands} works?}
+\title{Details in $GW$-BSE}
 \author{Jinyuan Wu}
 
 \begin{document}
 
 \maketitle
 
+\begin{frame}
+    \frametitle{Table of contents}
 
-\section{A glance at $GW$}
+    \tableofcontents
+
+\end{frame}
+
+\section{$GW$: a quick course}
 
 \begin{frame}[allowframebreaks]
-\frametitle{$GW$ in momentum space}
+\frametitle{What's $GW$}
 
 \textbf{To be very concise\dots} $- \ii \Sigma \approx GW^{\text{RPA}} = \begin{gathered}
     \begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-0.65,xscale=0.65, baseline=(XXXX.south) ]
@@ -116,77 +122,100 @@
 \end{gathered}$.
 
 \textbf{Assuming quasiparticles\dots} 
-$\scriptstyle v(\vb{q} + \vb{G}) = \frac{4\pi }{V \abs*{\vb{q} + \vb{G}}^2}$.
+$\scriptstyle v(\vb*{q} + \vb*{G}) = \frac{4\pi }{V \abs*{\vb*{q} + \vb*{G}}^2}$.
 $\scriptstyle \Sigma \stackrel{\int_{\text{contour}}}{=} \Sigma^{\text{CH}} + \Sigma^{\text{SX}}$,
-$\scriptstyle \epsilon_{\vb{G} \vb{G}'}(\vb{q}, \omega) = \delta_{\vb{G} \vb{G}'} - v(q + \vb{G}) \chi_{\vb{G} \vb{G}'}(\vb{q}, \omega)$, 
-$\scriptstyle M_{n n'}(\vb{k}, \vb{q}, \vb{G}) = \mel*{n \vb{k} + \vb{q}}{\ee^{\ii (\vb{q} + \vb{G}) \cdot \vb{r}}}{n' \vb{k}}$
-\begin{equation*}
+$\scriptstyle \epsilon_{\vb*{G} \vb*{G}'}(\vb*{q}, \omega) = \delta_{\vb*{G} \vb*{G}'} - v(q + \vb*{G}) \chi_{\vb*{G} \vb*{G}'}(\vb*{q}, \omega)$, 
+$\scriptstyle M_{n n'}(\vb*{k}, \vb*{q}, \vb*{G}) = \mel*{n \vb*{k} + \vb*{q}}{\ee^{\ii (\vb*{q} + \vb*{G}) \cdot \vb*{r}}}{n' \vb*{k}}$
+\begin{equation}
     \scriptsize
     \begin{aligned}
-    \mel{n \vb{k}}{\Sigma^{\text{SX}}(\omega)}{n' \vb{k}} 
-    &= - \sum_{n''}^{\text{occ}} \sum_{\vb{q} \vb{G} \vb{G}'}
-    M^*_{n'' n} (\vb{k}, - \vb{q}, - \vb{G}) M_{n'' n'} (\vb{k}, - \vb{q},  -\vb{G}') \\
-    &\quad\quad \times  \epsilon^{-1}_{\vb{G} \vb{G}'}(\vb{q}, \omega - E_{n'', \vb{k} - \vb{q}}) 
-    v(\vb{q} + \vb{G}') ,
+    \mel{n \vb*{k}}{\Sigma^{\text{SX}}(\omega)}{n' \vb*{k}} 
+    &= - \sum_{n''}^{\text{occ}} \sum_{\vb*{q} \vb*{G} \vb*{G}'}
+    M^*_{n'' n} (\vb*{k}, - \vb*{q}, - \vb*{G}) M_{n'' n'} (\vb*{k}, - \vb*{q},  -\vb*{G}') \\
+    &\quad\quad \times  \epsilon^{-1}_{\vb*{G} \vb*{G}'}(\vb*{q}, \omega - E_{n'', \vb*{k} - \vb*{q}}) 
+    v(\vb*{q} + \vb*{G}') ,
     \end{aligned}
     \label{eq:sex}
-\end{equation*}
-\begin{equation*}
+\end{equation}
+\begin{equation}
     \scriptsize
     \begin{aligned}
-        \mel{n \vb{k}}{\Sigma^{\text{CH}}(\omega)}{n' \vb{k}} 
-        &= \frac{\ii}{2\pi} \sum_{n''} \sum_{\vb{q}, \vb{G}, \vb{G}'} 
-        M^*_{n'' n} (\vb{k}, - \vb{q}, - \vb{G})  M_{n'' n'} (\vb{k}, - \vb{q},  -\vb{G}') \\
+        \mel{n \vb*{k}}{\Sigma^{\text{CH}}(\omega)}{n' \vb*{k}} 
+        &= \frac{\ii}{2\pi} \sum_{n''} \sum_{\vb*{q}, \vb*{G}, \vb*{G}'} 
+        M^*_{n'' n} (\vb*{k}, - \vb*{q}, - \vb*{G})  M_{n'' n'} (\vb*{k}, - \vb*{q},  -\vb*{G}') \\
         & \times \int_{0}^{\infty} \dd{\omega'} 
         \frac{
-            [\epsilon^{\text{r}}_{\vb{G} \vb{G}'}]^{-1} (\vb{q}, \omega')
-            - [\epsilon^{\text{a}}_{\vb{G} \vb{G}'}]^{-1} (\vb{q}, \omega') 
-        }{\omega - E_{n \vb{k}} - \omega' + \ii 0^+ \sgn(E_{n \vb{k}})} v(\vb{q}+\vb{G}') .
+            [\epsilon^{\text{r}}_{\vb*{G} \vb*{G}'}]^{-1} (\vb*{q}, \omega')
+            - [\epsilon^{\text{a}}_{\vb*{G} \vb*{G}'}]^{-1} (\vb*{q}, \omega') 
+        }{\omega - E_{n \vb*{k}} - \omega' + \ii 0^+ \sgn(E_{n \vb*{k}})} v(\vb*{q}+\vb*{G}') .
     \end{aligned}
     \label{eq:coh}
-\end{equation*}
-\begin{equation*}
+\end{equation}
+\begin{equation}
     \scriptsize
     \begin{aligned}
-        \chi^{\text{r/a}}_{\vb{G} \vb{G}'}(\vb{q}, \omega)
-        &= \sum_{\vb{k}} \sum_{n}^{\text{occ}} \sum_{n'}^{\text{emp}} 
-        M_{n n'} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'} (\vb{k}, \vb{q}, \vb{G}') \\
+        \chi^{\text{r/a}}_{\vb*{G} \vb*{G}'}(\vb*{q}, \omega)
+        &= \sum_{\vb*{k}} \sum_{n}^{\text{occ}} \sum_{n'}^{\text{emp}} 
+        M_{n n'} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'} (\vb*{k}, \vb*{q}, \vb*{G}') \\
         &\times \left(
         \frac{
             1
         }{
-            \omega + E_{n, \vb{k} + \vb{q}} - E_{n' \vb{k}} \pm \ii 0^+
+            \omega + E_{n, \vb*{k} + \vb*{q}} - E_{n' \vb*{k}} \pm \ii 0^+
         }
         + \frac{
             1
         }{
-            - \omega + E_{n, \vb{k} + \vb{q}} - E_{n' \vb{k}} \mp \ii 0^+
+            - \omega + E_{n, \vb*{k} + \vb*{q}} - E_{n' \vb*{k}} \mp \ii 0^+
         }
         \right).
     \end{aligned}
     \label{eq:chi}
-\end{equation*}
+\end{equation}
 
-Note that $\chi$ and $\Sigma_{nn'}^{\text{CH}}$ involve summation over high energy states 
-(with or without GPP)
+What a splendid equation system! 
 
-\textbf{One bottleneck of $GW$ in momentum space}
+\textbf{In practice\dots we always use GPP} $\epsilon(\omega)$ is assumed to be 
+plasmon model-like, so -- we feed 
+\begin{equation}
+    \chi_{\vb*{G} \vb*{G}'}(\vb*{q}, \omega=0)
+    = \sum_{\vb*{k}} \sum_{n}^{\text{occ}} \sum_{n'}^{\text{emp}} 
+    M_{n n'} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'} (\vb*{k}, \vb*{q}, \vb*{G}') 
+    \frac{
+        2
+    }{
+        E_{n, \vb*{k} + \vb*{q}} - E_{n' \vb*{k}} 
+    }
+\end{equation}
+to \emph{analytic} expressions of $\Sigma^{\text{CH, SX}}$.
+
+\vspace{1cm}
+
+\textbf{Huge simplification\dots} Hedin $\stackrel{\text{assuming $GW$}}{\rightarrow}$ 
+$GW$ $\stackrel{\text{QP. approx.}}{\rightarrow}$ 
+\eqref{eq:sex}, \eqref{eq:coh}, \eqref{eq:chi} $\stackrel{\text{GPP}}{\rightarrow}$ we are here
+
+\textbf{But still burdensome} \emph{Summation over empty bands -- 1000-30000 bands!!!}
 
 \end{frame}
 
+\section{The mystery of \shortcode{pseudobands}}
 
 \begin{frame}
 \frametitle{The problem of summing over many empty bands}
 
+\textbf{Empty states are important -- but why?}
+
+\vspace{1cm}
 
 \textbf{One further simplification trick:} \shortcode{pseudobands}. 
-For $E_{n \vb{k}} \gg E_{\text{F}}$:
+For $E_{n \vb*{k}} \gg E_{\text{F}}$:
 \[
     \begin{aligned}
-        \{ \phi_{n \vb{k}} \}_{\text{adjacent energy block $n_{\text{b}}$}} 
-        \rightarrow \sum_{n \in \text{block $n_{\text{b}}$}} \phi_{n \vb{k}}, \\
-        \{ E_{n \vb{k}} \}_{\text{adjacent energy block $n_{\text{b}}$}} \rightarrow
-        \frac{1}{\abs*{n_{\text{b}}}}  \sum_{n \in \text{block $n_{\text{b}}$}} E_{n \vb{k}}.
+        \{ \phi_{n \vb*{k}} \}_{\text{adjacent energy block $n_{\text{b}}$}} 
+        \rightarrow \sum_{n \in \text{block $n_{\text{b}}$}} \phi_{n \vb*{k}}, \\
+        \{ E_{n \vb*{k}} \}_{\text{adjacent energy block $n_{\text{b}}$}} \rightarrow
+        \frac{1}{\abs*{n_{\text{b}}}}  \sum_{n \in \text{block $n_{\text{b}}$}} E_{n \vb*{k}}.
     \end{aligned}
 \]
 4000 bands $\to$ $\sim 400$ to $\sim 1000$ bands.
@@ -196,8 +225,6 @@ For $E_{n \vb{k}} \gg E_{\text{F}}$:
 \dots but is this snake oil? It makes no sense!!!
 
 \end{frame}
-
-\section{\shortcode{pseudobands}, and when it works}
 
 \begin{frame}[allowframebreaks]
 \frametitle{Understanding \shortcode{pseudobands}: energy averaging}
@@ -211,17 +238,17 @@ For $E_{n \vb{k}} \gg E_{\text{F}}$:
 
 \vspace{0.5cm}
 
-\faHandPointRight For $E_{n \vb{k}} \gg E_{\text{F}}$ ($\omega$):  
-$\text{energy-dependent factors} \sim \const.$ for all $\vb{k}$.
+\faHandPointRight For $E_{n \vb*{k}} \gg E_{\text{F}}$ ($\omega$):  
+$\text{energy-dependent factors} \sim \const.$ for all $\vb*{k}$.
 
 \vspace{0.5cm}
 
 Thus for both $\chi$ and $\Sigma^{\text{CH}}$ involving summation over empty bands:
-\begin{equation*}
+\begin{equation}
     \sum_{n''}^{\text{high emp. bands}} M_{n'' n}^* M_{n'' n'} \times \cdots 
     = \sum_{\text{block $n_{\text{b}}$}} \cdots \times \sum_{n'' \in \text{block $n_{\text{b}}$}}
     M_{n'' n}^* M_{n'' n'}.
-\end{equation*}
+\end{equation}
 In RHS $E_{\text{emp}}$ is replaced by the average energy.
 
 \framebreak
@@ -233,12 +260,16 @@ In RHS $E_{\text{emp}}$ is replaced by the average energy.
 
 \textbf{Example} High-energy DFT bands of \ce{WTe2} monolayer 
 (ONCV-SG15, 120 electrons; \SI{80}{Ry} cutoff, $20 \times 20 \times 1$ grid). 
-$x$ axis = $\vb{k}$ index in irreducible 1BZ; 
+$x$ axis = $\vb*{k}$ index in irreducible 1BZ; 
 fastest varying coordinate = $k_y$ 
 
 \vspace{0.5cm}
 
-\faHandPointRight $n \sim 1000$: bands are generally flat 
+\begin{itemize}
+    \item[\faHandPointRight] Bands above 1000 are generally flat (but dispersion $\uparrow$ as $n$ $\uparrow$)
+    \item[\faHandPointRight] Low-lying pseudobands blocks are very close in energy 
+    (but $1 / (E_{\text{emp}} - E_{\text{occ}})$ more sensitive to dispersion)
+\end{itemize}
 
 \framebreak
 
@@ -249,22 +280,24 @@ fastest varying coordinate = $k_y$
 
 \textbf{Example} High-energy DFT bands of \ce{WTe2} monolayer 
 (ONCV-SG15, 120 electrons; \SI{80}{Ry} cutoff, $20 \times 20 \times 1$ grid). 
-$x$ axis = $\vb{k}$ index in irreducible 1BZ; 
+$x$ axis = $\vb*{k}$ index in irreducible 1BZ; 
 fastest varying coordinate = $k_y$ 
 
 \vspace{0.5cm}
 
-\faHandPointRight High-lying bands are more dispersive but since they are high, $1 / (E_{\text{emp}} - E_{\text{occ}})$ is still flat 
-
+\begin{itemize}
+    \item[\faHandPointRight] Bands above 1000 are generally flat (but dispersion $\uparrow$ as $n$ $\uparrow$)
+    \item[\faHandPointRight] High-energy blocks are more dispersive 
+    (but $1 / (E_{\text{emp}} - E_{\text{occ}})$ is smaller so no worry)
+\end{itemize}
 
 \end{frame}
-
 
 \begin{frame}
 \frametitle{Understanding \shortcode{pseudobands}: wave function averaging?}
 
 For \shortcode{pseudobands} to work, we need 
-\begin{equation*}
+\begin{equation}
     \begin{aligned}
         \underbrace{
             \sum_{n'' \in \text{block $n_{\text{b}}$}} M_{n'' n}^* M_{n'' n'} 
@@ -275,7 +308,7 @@ For \shortcode{pseudobands} to work, we need
         }_{\text{pseudobands}}.
     \end{aligned}
     \label{eq:pseudobands-correct}
-\end{equation*}
+\end{equation}
 
 \textbf{The problem: it of course isn't the case in general.}
 If $[M_{n_1'' n'} M_{n_2'' n}^*]_{n_1'' n_2''}$ is a random matrix: 
@@ -287,23 +320,23 @@ $\text{LHS}:\text{RHS} \approx 0.3$.
 
 \end{frame}
 
-\section{Technical issues in calculating $M_{nn'}(\vb{k}, \vb{q}, \vb{G})$}
+\section{Technical issues in calculating $M_{nn'}(\vb*{k}, \vb*{q}, \vb*{G})$}
 
 \begin{frame}
-\frametitle{The structure of $\phi_{n \vb{k}}$}
+\frametitle{The structure of $\phi_{n \vb*{k}}$}
 
 \textbf{Plane wave basis} In BerkeleyGW \shortcode{WFN.h5}, 
-\begin{equation*}
-    \phi_{n \vb{k}}(\vb{r}, \sigma) = \frac{1}{\sqrt{V}} \sum_{\vb{G}} \ee^{\ii (\vb{k} + \vb{G}) \cdot \vb{r}} c_{n \vb{k}, \vb{G} \sigma}.
-\end{equation*}    
+\begin{equation}
+    \phi_{n \vb*{k}}(\vb*{r}, \sigma) = \frac{1}{\sqrt{V}} \sum_{\vb*{G}} \ee^{\ii (\vb*{k} + \vb*{G}) \cdot \vb*{r}} c_{n \vb*{k}, \vb*{G} \sigma}.
+\end{equation}    
 Thus 
-\begin{equation*}
-    M_{nn'}(\vb{k}, \vb{q}, \vb{G}) 
-    = \mel*{n \vb{k} + \vb{q}}{\ee^{\ii (\vb{q} + \vb{G}) \cdot \vb{r}}}{n' \vb{k}} 
-    = \sum_{\vb{G}', \sigma} c^*_{n \vb{k} + \vb{q}, \vb{G} + \vb{G}' \sigma} c_{n \vb{k}, \vb{G}' \sigma}.
-\end{equation*}
+\begin{equation}
+    M_{nn'}(\vb*{k}, \vb*{q}, \vb*{G}) 
+    = \mel*{n \vb*{k} + \vb*{q}}{\ee^{\ii (\vb*{q} + \vb*{G}) \cdot \vb*{r}}}{n' \vb*{k}} 
+    = \sum_{\vb*{G}', \sigma} c^*_{n \vb*{k} + \vb*{q}, \vb*{G} + \vb*{G}' \sigma} c_{n \vb*{k}, \vb*{G}' \sigma}.
+\end{equation}
 
-\textbf{Cutoff} Each $\vb{k}$ has its own $\vb{G}$-grid ($\sim 30000$ vectors for \SI{80}{Ry}).
+\textbf{Cutoff} Each $\vb*{k}$ has its own $\vb*{G}$-grid ($\sim 30000$ vectors for \SI{80}{Ry}).
 
 \end{frame}
 
@@ -312,24 +345,24 @@ Thus
 
 \textbf{Input} 
 \begin{itemize}
-    \item indices of $\vb{k}, \vb{q}$ in $\vb{k}$-grid; 
-    \item index of $\vb{G}$ in $\vb{G}$-grid of $\vb{k}$ 
-    (expect a $\vb{G}$ in $GW$ $\vb{G}$-grid, 
+    \item indices of $\vb*{k}, \vb*{q}$ in $\vb*{k}$-grid; 
+    \item index of $\vb*{G}$ in $\vb*{G}$-grid of $\vb*{k}$ 
+    (expect a $\vb*{G}$ in $GW$ $\vb*{G}$-grid, 
     cutoff = say \SI{30}{Ry}, not \SI{80}{Ry});
     \item $n, n'$.
 \end{itemize}
 
 \textbf{Procedure}
 \begin{enumerate}
-    \item find index of $\vb{k}$
-    \item find index of $\vb{G} + \vb{G}'$ in $\vb{G}$-grid of $\vb{k} + \vb{q}$,
-    for each $\vb{G}'$ in $\vb{G}$-grid of $\vb{k}$
-    \item do summation $\sum_{\vb{G}', \sigma} c^*_{n \vb{k} + \vb{q}, \vb{G} + \vb{G}' \sigma} c_{n \vb{k}, \vb{G}' \sigma}$.
+    \item find index of $\vb*{k}$
+    \item find index of $\vb*{G} + \vb*{G}'$ in $\vb*{G}$-grid of $\vb*{k} + \vb*{q}$,
+    for each $\vb*{G}'$ in $\vb*{G}$-grid of $\vb*{k}$
+    \item do summation $\sum_{\vb*{G}', \sigma} c^*_{n \vb*{k} + \vb*{q}, \vb*{G} + \vb*{G}' \sigma} c_{n \vb*{k}, \vb*{G}' \sigma}$.
 \end{enumerate}    
 
-\vspace{0.3cm}
+\vspace{0.5cm}
 
-\textbf{Performance} Main bottleneck: finding $\vb{G} + \vb{G}'$.
+\textbf{Performance} Main bottleneck: finding $\vb*{G} + \vb*{G}'$.
 Using \shortcode{StaticArrays.jl} helps a lot! 
 
 \end{frame}
@@ -340,66 +373,66 @@ Using \shortcode{StaticArrays.jl} helps a lot!
 \frametitle{$\chi$ revisited}
 
 Under GPP:
-\begin{equation*}
+\begin{equation}
     \begin{aligned}
-        \chi_{\vb{G} \vb{G}'}(\vb{q}, \omega)^{\text{high band terms}}
-        \approx \sum_{\vb{k}} \sum_{\text{block $n_{\text{b}}$}}^{\text{emp}} 
+        \chi_{\vb*{G} \vb*{G}'}(\vb*{q}, \omega)^{\text{high band terms}}
+        \approx \sum_{\vb*{k}} \sum_{\text{block $n_{\text{b}}$}}^{\text{emp}} 
         \frac{
             2
         }{
-            E_{n, \vb{k} + \vb{q}} - E_{\text{average in block $n_{\text{b}}$}} 
+            E_{n, \vb*{k} + \vb*{q}} - E_{\text{average in block $n_{\text{b}}$}} 
         } \\
         \times \sum_{n' \in \text{block $n_{\text{b}}$}} \sum_{n}^{\text{occ}} 
-        M_{n n'} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'} (\vb{k}, \vb{q}, \vb{G}') 
+        M_{n n'} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'} (\vb*{k}, \vb*{q}, \vb*{G}') 
     \end{aligned}
-\end{equation*}
+\end{equation}
 
 \vspace{0.5cm}
 
 \textbf{Our goal} \emph{Finding how diagonal is}
-\begin{equation*}
+\begin{equation}
     \sum_{n}^{\text{occ}} 
-        M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}') 
-\end{equation*}
+        M_{n n'_1} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'_2} (\vb*{k}, \vb*{q}, \vb*{G}') 
+\end{equation}
 It should be diagonal for \shortcode{pseudobands} to work.
 
 \end{frame}
 
 \begin{frame}[allowframebreaks]
 \frametitle{Numerical charaterization of 
-$\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}') $}
+$\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'_2} (\vb*{k}, \vb*{q}, \vb*{G}') $}
 
-\textbf{Case 1: $\vb{G} = \vb{G}'$}  In this case $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}')$ is large and fairly diagonal
+\textbf{Case 1: $\vb*{G} = \vb*{G}'$}  In this case $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'_2} (\vb*{k}, \vb*{q}, \vb*{G}')$ is large and fairly diagonal
 
 \begin{center}
     \includegraphics[width=0.6\textwidth]{../data/chi/nc_range-1951-2000-k_idx-1-q_idx-1-G_idx-810.png}
 \end{center}
 
-\textbf{Parameters} $\vb{G} = (0, 1, -14), \vb{k} = \vb{k}_2 = (0, 0.00, 0), \vb{q} = (0, 0.00, 0)$
+\textbf{Parameters} $\vb*{G} = (0, 1, -14), \vb*{k} = \vb*{k}_2 = (0, 0.00, 0), \vb*{q} = (0, 0.00, 0)$
 
 \framebreak
 
-\textbf{Case 1: $\vb{G} = \vb{G}'$}  In this case $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}')$ is large and fairly diagonal
+\textbf{Case 1: $\vb*{G} = \vb*{G}'$}  In this case $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'_2} (\vb*{k}, \vb*{q}, \vb*{G}')$ is large and fairly diagonal
 
 \begin{center}
     \includegraphics[width=0.6\textwidth]{../data/chi/nc_range-1951-2000-k_idx-2-q_idx-3-G_idx-810.png}
 \end{center}
 
-\textbf{Parameters} $\vb{G} = (0, 1, -14), \vb{k} = \vb{k}_2 = (0, 0.05, 0), \vb{q} = (0, 0.10, 0)$
+\textbf{Parameters} $\vb*{G} = (0, 1, -14), \vb*{k} = \vb*{k}_2 = (0, 0.05, 0), \vb*{q} = (0, 0.10, 0)$
 
 \framebreak
 
-\textbf{Case 1: $\vb{G} = \vb{G}'$}  In this case $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}')$ is large and fairly diagonal
+\textbf{Case 1: $\vb*{G} = \vb*{G}'$}  In this case $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'_2} (\vb*{k}, \vb*{q}, \vb*{G}')$ is large and fairly diagonal
 
 \begin{center}
     \includegraphics[width=0.6\textwidth]{../data/chi/nc_range-121-150-k_idx-2-q_idx-3-G_idx-100.png}
 \end{center}
 
-Strikingly, $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}')$ is still very diagonal for bands near Fermi surface!
+Strikingly, $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'_2} (\vb*{k}, \vb*{q}, \vb*{G}')$ is still very diagonal for bands near Fermi surface!
 
 \framebreak
 
-\textbf{Case 2: $\vb{G} \neq \vb{G}'$} $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}')$ is very non-diagonal, 
+\textbf{Case 2: $\vb*{G} \neq \vb*{G}'$} $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'_2} (\vb*{k}, \vb*{q}, \vb*{G}')$ is very non-diagonal, 
 but since the terms's random phases cancel each other so the overall sum after $\sum_{n'}^{\text{emp}}$ is small
 
 \begin{center}
@@ -427,14 +460,17 @@ but since the terms's random phases cancel each other so the overall sum after $
 \begin{frame}
 \frametitle{Cancellation of cross-terms in $\chi$}
 
-$\scriptstyle M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}')$ and $n$ (occupied band index), when $n_1' \neq n_2'$:
+$\scriptstyle M_{n n'_1} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'_2} (\vb*{k}, \vb*{q}, \vb*{G}')$ and $n$ (occupied band index), when $n_1' \neq n_2'$:
 \begin{center}
     \includegraphics[width=0.6\textwidth]{../data/chi/nc-n1-2000-n2-1000-nv-1-120-k_idx-12-q_idx-37-G_idx-200.png}
 \end{center}
 
-\faHandPointRight Although for a single $n$, the value can be large, 
-as we sum over $n$ the terms cancel each other $\Rightarrow$
-diagonal $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}')$ 
+\begin{itemize}
+    \item[\faHandPointRight] Although for a single $n$, the value can be large, 
+    as we sum over $n$ the terms cancel each other $\Rightarrow$
+    diagonal $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb*{k}, \vb*{q}, \vb*{G}) M^*_{nn'_2} (\vb*{k}, \vb*{q}, \vb*{G}')$ 
+    \item Maybe that's why we need semi-core states?
+\end{itemize}
 
 \end{frame}
 
@@ -445,21 +481,21 @@ diagonal $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G})
 \frametitle{$\Sigma^{\text{CH}}$ revisited}
 
 Only $\Sigma^{\text{CH}}$ involves $\sum^{\text{emp}}$:
-\begin{equation*}
+\begin{equation}
     \begin{aligned}
-        \mel*{n \vb{k}}{\Sigma^{\text{CH, GPP}}}{n' \vb{k}} 
-        &= \frac{1}{2} \sum_{n''} \sum_{\vb{q} \vb{G} \vb{G}'} M_{n'' n}^*(\vb{k}, - \vb{q}, -\vb{G})
-        M_{n'' n'}(\vb{k}, - \vb{q}, - \vb{G}') \times  \\
-        &\quad \quad \text{something about $\vb{q}, \vb{k}, \vb{G}, \vb{G}'$}
+        \mel*{n \vb*{k}}{\Sigma^{\text{CH, GPP}}}{n' \vb*{k}} 
+        &= \frac{1}{2} \sum_{n''} \sum_{\vb*{q} \vb*{G} \vb*{G}'} M_{n'' n}^*(\vb*{k}, - \vb*{q}, -\vb*{G})
+        M_{n'' n'}(\vb*{k}, - \vb*{q}, - \vb*{G}') \times  \\
+        &\quad \quad \text{something about $\vb*{q}, \vb*{k}, \vb*{G}, \vb*{G}'$}
     \end{aligned}
     \label{eq:ch.simple}
-\end{equation*}
+\end{equation}
 
 \textbf{Problems} \begin{itemize}
     \item No summation over occupied states $\Rightarrow$ 
     \xmark the aforementioned cancellation mechanism 
-    \item Summation over $\vb{G}$ very complicated $\Rightarrow$
-    analysis based on $\vb{G}$ very hard.
+    \item Summation over $\vb*{G}$ very complicated $\Rightarrow$
+    analysis based on $\vb*{G}$ very hard.
 \end{itemize}
 
 \end{frame}
@@ -469,8 +505,10 @@ Only $\Sigma^{\text{CH}}$ involves $\sum^{\text{emp}}$:
 
 \begin{itemize}
     \item It has been verified that a single $M_{n''_1 n}^* M_{n''_2 n}$ term is never diagonal
-    \item But it seems naively summing over $\vb{G} = \vb{G}'$ (without considering the weight factor)
+    \item But it seems naively summing over $\vb*{G}$ (without considering the weight factor)
     makes it diagonal\dots
+    \item When $n_1'' \neq n_2''$ it's no longer diagonal -- 
+        but probably not that important after all?
 \end{itemize}    
 
 \begin{center}
@@ -478,53 +516,10 @@ Only $\Sigma^{\text{CH}}$ involves $\sum^{\text{emp}}$:
 \end{center}
 
 \begin{itemize}
-    \item $M_{n''_1 n}^*(\vb{G}_1) M_{n''_2 n}(\vb{G}_2)$ is not diagonal at all when $\vb{G}_1 \neq \vb{G}_2$; 
-    \item but probably only the $\vb{G}_1 = \vb{G}_2$ terms matter?
+    \item $\sum_{\vb*{G}_1, \vb*{G}_2} M_{n''_1 n}^*(\vb*{G}_1) M_{n''_2 n}(\vb*{G}_2)$ is not diagonal at all; 
+    but probably this is not astonishing because how close $\vb*{G}_1$ and $\vb*{G}_2$ are 
+    definitely is important; note the $\Omega_{\vb*{G}_1 \vb*{G}_2}$ factor in $\Sigma^{\text{CH}}$.
 \end{itemize}
-
-\end{frame}
-
-\section{Comments from Felipe H. Jornada's recent paper}
-
-\begin{frame}
-\frametitle{``Stochastic'' pseudobands}
-
-Energy averaging is also done in their paper:
-\[
-    G = \sum_{\text{$n$ near F.S.}} \frac{\dyad{\phi_{n \vb{k}}}}{\omega - E_{n \vb{k}}} + \sum_{\text{pseudobands block}} \frac{1}{\omega - \bar{E}} \sum_{n \in \text{block}} \dyad{\phi_{n \vb{k}}}.
-\]     
-
-\textbf{Their procedure} Replace each pseudobands block by \emph{several bands}:
-\[
-    \{\phi_{n \vb{k}}\}_{\text{$n$ in block}} \longrightarrow
-    \left\{
-        \ket*{\phi_{\xi \vb{k}}} = \sum_{\text{$n$ in block}} 
-        \ee^{\ii \theta_{n \xi}} \ket*{\phi_{n \vb{k}}}
-    \right\}_\xi
-\]
-\textbf{Justification} When $N_\xi \to \infty$, 
-$\expval{
-    \ee^{- \ii \theta_{n' \xi}} \ee^{\ii \theta_{n \xi}}
-}_\xi = \delta_{n n'}$
-
-\textbf{Comparison with the current script} When $N_\xi = 1$, 
-$\ee^{\ii \theta_{n \xi}}$ comes from DFT diagonalization
-
-\end{frame}
-
-\begin{frame}
-\frametitle{FHJ's justification of pseudobands}
-
-\textbf{Convergence conditions} When $N_{\text{pseudobands blocks}} \to \infty$ and in each block $N_\xi \to \infty$, 
-\begin{itemize}
-    \item the expectations of $\chi$ and $\Sigma$ goes to the true value;
-    \item the standard error goes to zero.
-\end{itemize}
-
-\textbf{Is this result enough as a justification?} My answer: no; 
-because the limits = not doing pseudobands at all.
-
-\uncover<2->{\textbf{Additional justification} ``the polarizability tends to converge much faster than $G$, partially due to the \emph{rapidly oscillating nature} of the matrix elements involving Kohn-Sham states used in the evaluation of the polarizability''}
 
 \end{frame}
 
