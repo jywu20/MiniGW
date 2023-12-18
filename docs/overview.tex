@@ -95,7 +95,7 @@
 \maketitle
 
 
-\section{A glance at $GW$}
+\section{A review at $GW$}
 
 \begin{frame}[allowframebreaks]
 \frametitle{$GW$ in momentum space}
@@ -205,8 +205,8 @@ For $E_{n \vb{k}} \gg E_{\text{F}}$:
 \textbf{Observation} 
 \begin{itemize}
     \item $\chi \sim M M^* \times \text{some-function}(E_{\text{emp}} - E_{\text{occ}})$;
-    \item $\Sigma^{\text{CH}} \sim M M^* \times \text{some-function}(\omega - E)$; 
-    \item We are only interested in $\omega \sim E_{\text{F}}$.
+    \item $\Sigma^{\text{CH}} \sim M M^* \times \text{some-function}(\omega - E)$, \quad 
+    $\omega \sim E_{\text{F}}$.
 \end{itemize}
 
 \vspace{0.5cm}
@@ -218,11 +218,11 @@ $\text{energy-dependent factors} \sim \const.$ for all $\vb{k}$.
 
 Thus for both $\chi$ and $\Sigma^{\text{CH}}$ involving summation over empty bands:
 \begin{equation*}
-    \sum_{n''}^{\text{high emp. bands}} M_{n'' n}^* M_{n'' n'} \times \cdots 
-    = \sum_{\text{block $n_{\text{b}}$}} \cdots \times \sum_{n'' \in \text{block $n_{\text{b}}$}}
+    \sum_{n''}^{\text{high emp. bands}} M_{n'' n}^* M_{n'' n'} \times f(E_{n'' \vb{k}}) 
+    = \sum_{\text{block $n_{\text{b}}$}} f(\bar{E}_{n_{\text{b}}}) \sum_{n''}^{\text{block $n_{\text{b}}$}}
     M_{n'' n}^* M_{n'' n'}.
 \end{equation*}
-In RHS $E_{\text{emp}}$ is replaced by the average energy.
+
 
 \framebreak
 
@@ -264,7 +264,7 @@ fastest varying coordinate = $k_y$
 \frametitle{Understanding \shortcode{pseudobands}: wave function averaging?}
 
 For \shortcode{pseudobands} to work, we need 
-\begin{equation*}
+\begin{equation}
     \begin{aligned}
         \underbrace{
             \sum_{n'' \in \text{block $n_{\text{b}}$}} M_{n'' n}^* M_{n'' n'} 
@@ -275,15 +275,14 @@ For \shortcode{pseudobands} to work, we need
         }_{\text{pseudobands}}.
     \end{aligned}
     \label{eq:pseudobands-correct}
-\end{equation*}
+\end{equation}
 
-\textbf{The problem: it of course isn't the case in general.}
-If $[M_{n_1'' n'} M_{n_2'' n}^*]_{n_1'' n_2''}$ is a random matrix: 
-$\text{LHS}:\text{RHS} \approx 0.3$.
+\textbf{The question: is $[M_{n_1'' n'} M_{n_2'' n}^*]_{n_1'' n_2''}$ diagonal?}
+Easy to verify: it's not.
 
 \vspace{0.5cm}
 
-\textbf{The question:} \emph{Then in which case is \eqref{eq:pseudobands-correct} correct in some sense?} 
+\textbf{Then in which case is \eqref{eq:pseudobands-correct} correct in some sense?} 
 
 \end{frame}
 
@@ -342,7 +341,7 @@ Using \shortcode{StaticArrays.jl} helps a lot!
 Under GPP:
 \begin{equation*}
     \begin{aligned}
-        \chi_{\vb{G} \vb{G}'}(\vb{q}, \omega)^{\text{high band terms}}
+        \chi_{\vb{G} \vb{G}'}(\vb{q}, \omega=0)^{\text{high band terms}}
         \approx \sum_{\vb{k}} \sum_{\text{block $n_{\text{b}}$}}^{\text{emp}} 
         \frac{
             2
@@ -474,7 +473,7 @@ Only $\Sigma^{\text{CH}}$ involves $\sum^{\text{emp}}$:
 \end{itemize}    
 
 \begin{center}
-    \includegraphics[width=0.5\textwidth]{../data/sigma/nc_range-1800-2000-n_idx-120-n_prime_idx_120-k_idx-1-q_idx-1-G_range-200-250.png}
+    \includegraphics[width=0.6\textwidth]{../data/sigma/nc_range-1800-1880-n_idx-119-n_prime_idx_119-k_idx-1-q_idx-1-G_range-800-900.png}
 \end{center}
 
 \begin{itemize}
@@ -522,9 +521,42 @@ $\ee^{\ii \theta_{n \xi}}$ comes from DFT diagonalization
 \end{itemize}
 
 \textbf{Is this result enough as a justification?} My answer: no; 
-because the limits = not doing pseudobands at all.
+because the limits = not doing pseudobands at all. 
+(And their recommended values are not large enough anyway.)
 
 \uncover<2->{\textbf{Additional justification} ``the polarizability tends to converge much faster than $G$, partially due to the \emph{rapidly oscillating nature} of the matrix elements involving Kohn-Sham states used in the evaluation of the polarizability''}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Compressing the bands even harder: size of blocks}
+
+Recall that band dispersion is the main problem\dots
+
+\[
+    \begin{aligned}
+        \Delta \chi \sim \frac{\Delta E}{E^2}, \quad \chi \sim \frac{1}{E} \Rightarrow
+        \frac{\Delta \chi}{\chi} \simeq \frac{\Delta E}{E} \\
+        \Rightarrow
+        \frac{\Delta \chi}{\chi} \lesssim \const \Leftrightarrow \boxed{\frac{\Delta E}{E} \lesssim \const}
+    \end{aligned}
+\]
+
+\textbf{Exponential growth of the energy spread of blocks!}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Compressing the bands even harder: pseudobands near $E_{\text{F}}$?}
+
+They claim that for \shortcode{epsilon}, 
+bands near Fermi surface can also be pseudo-ized 
+
+\emph{It somehow goes against my own numerical experiments; but they are quite sure about that hmm\dots}
+
+They also claim that for \shortcode{sigma}, only the bands near Fermi surface shouldn't be pseudo-ized.
+
+\textbf{Important claim: protection window is not a convergence parameter.} 
 
 \end{frame}
 
