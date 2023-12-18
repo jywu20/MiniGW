@@ -125,11 +125,11 @@
     }
 \end{equation}
 
-In the conventional pseudobands technique, 
+In the conventional pseudobands technique (TODO: cite), 
 the empty states are divided into one low-energy protected subspace 
 and a series of pseudobands blocks; 
 each of the blocks contain bands with comparable energies.
-
+The high-energy terms in $\chi_{\vb{G} \vb{G}'}(\vb{q}, \omega = 0)$ are therefore replaced by  
 \begin{equation}
     \chi^{\text{P.B. blocks}}_{\vb{G} \vb{G}'}(\vb{q}, \omega = 0)
     = \sum_{\vb{k}}  \sum_{S}^{\text{P.B. terms}} \frac{
@@ -138,85 +138,41 @@ each of the blocks contain bands with comparable energies.
         E_{n \vb{k} + \vb{q}} - \bar{E}_S 
     } 
     \sum_{n_1', n_2'}^{S} \sum_{n}^{\text{occ}}
-    M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}') 
+    M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}') .
+    \label{eq:chi-pseudobands}
 \end{equation}
-
-In each block, we may see states containing a primary $\vb{G}$ component, 
+Because the energies of states in each pseudobands block are comparable, 
+in each pseudobands block, the states share the same set of predominant $\vb{G}$ vectors.
+Thus the states in pseudobands block $S$ can be written as 
 \begin{equation}
-    \braket*{\vb{r}}{n' \vb{k}} = \ee^{\ii \theta_{n' \vb{k}}} \ee^{\ii (\vb{k} + \vb{G}_{n'}) \cdot \vb{r}}, 
+    \braket*{\vb{r}}{n' \vb{k}} =  \sum_i^N 
+    c_{n' \vb{k}}^{(i)} \ee^{\ii (\vb{k} + \vb{G}^{(i)}_{S \vb{k}}) \cdot \vb{r}}, \quad 
+    \sum_{i}^{N} c^{(i)}_{n'_1 \vb{k}} c^{(i)*}_{n'_2 \vb{k}} = \delta_{n'_1 n'_2},
 \end{equation}
-or $N$ degenerate states containing $N$ primary $\vb{G}$ components
+and therefore 
 \begin{equation}
-    \braket*{\vb{r}}{n' \vb{k}} = \sum_i c_i \ee^{\ii (\vb{k} + \vb{G}_i) \cdot \vb{r}}.
+    M_{nn'}(\vb{k}, \vb{q}, \vb{G}) = \sum_{i}^{N} c_{n' \vb{k}}^{(i)} c_{n \vb{k} + \vb{q}}^*(\vb{G} + \vb{G}_{S \vb{k}}^{(i)}).
 \end{equation}
-The latter case is due to symmetry.
-
-When $n_1', n_2'$ both contain only one primary $\vb{G}$ component, and therefore
-\begin{equation}
-    M_{nn'}(\vb{k}, \vb{q}, \vb{G}) = \ee^{\ii \theta_{n' \vb{k}}} c^*_{n \vb{k} + \vb{q}}(\vb{G} + \vb{G}_{n'}).
-\end{equation}
-their contribution to $\chi$ is proportional to 
-\begin{equation}
-    \sum_n^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{n n'_2} (\vb{k}, \vb{q}, \vb{G}) 
-    = \sum_n^{\text{occ}} c^*_{n \vb{k} + \vb{q}}(\vb{G} + \vb{G}_{n'_1}) c_{n \vb{k} + \vb{q}}(\vb{G} + \vb{G}_{n'_2})
-    \approx \delta_{n_1' n_2'}.
-    \label{eq:approx-completeness}
-\end{equation}
-The right hand side likely becomes $\delta_{n_1' n_2'}$ after the summation, 
-because the subspace spanned by the dominant $\vb{G}$ components of the occupied states 
-is expected to largely overlap with the subspace of the occupied states.
-
-\begin{equation}
-    \braket*{\vb{r}}{n' \vb{k}} = \frac{1}{\sqrt{N}} \sum_i^N 
-    c_{n' \vb{k}}^{(i)} \ee^{\ii (\vb{k} + \vb{G}^{(i)}_{n' \vb{k}}) \cdot \vb{r}}, \quad 
-    \abs*{c_{n' \vb{k}}^{(i)}}^2 = 1, \quad 
-    \sum_{i}^{N} c^{(i)}_{n'_1 \vb{k}} c^{(i)*}_{n'_2 \vb{k}} = N \delta_{n'_1 n'_2}.
-\end{equation}
-Here since we assume $\ket*{n_1' \vb{k}}$ and $n_2' \vb{k}$ 
-share the same set of predominant $\vb{G}$ vectors, 
-we replace $\vb{G}^{(i)}_{n'_{1, 2} \vb{k}}$ by $\vb{G}^{(i)}_{n' \vb{k}}$
-(and the order of the $\vb{G}$ vectors are also set the same for $n_1'$ and $n_2'$), 
-and thus 
+The pseudobands approximation of the diagonal $\chi_{\vb{G} \vb{G}}$ components of the polarizability is proportional to 
 \begin{equation}
     \begin{aligned}
-    &\quad \sum_{n_1'n _2'}^S \sum_n^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{n n'_2} (\vb{k}, \vb{q}, \vb{G}) \\
-    &= \frac{1}{N} \sum_{i, j}^N \sum_{n}^{\text{occ}} 
-    c^{(i)}_{n'_1 \vb{k}} c^{(j) *}_{n'_2 \vb{k}}
-    c_{n \vb{k} + \vb{q}}^*(\vb{G} + \vb{G}^{(i)}_{n' \vb{k}})
-    c_{n \vb{k} + \vb{q}}  (\vb{G} + \vb{G}^{(j)}_{n' \vb{k}}) .
-    \end{aligned}
-\end{equation}
-The $i = j$ terms evaluate as 
-\begin{equation}
-    \sum_{i}^N \sum_{n}^{\text{occ}} 
-    c^{(i)}_{n'_1 \vb{k}} c^{(i) *}_{n'_2 \vb{k}}
-    \abs{c_{n \vb{k} + \vb{q}}^*(\vb{G} + \vb{G}^{(i)}_{n' \vb{k}})}^2 \propto \delta_{n_1' n_2'}.
-\end{equation}
-Note that the $\vb{G}^{(i)}_{n' \vb{k}}$ components are connected by symmetry operations, 
-and we have 
-\[
-    \abs{c_{n \vb{k} + \vb{q}}^*(\vb{G} + \vb{G}^{(i)}_{n' \vb{k}})}^2 = \const
-\]
-for $1 \leq i \leq N$, 
-and therefore the above equation is just a constant times 
-the summation of $c^{(i)}_{n'_1 \vb{k}} c^{(i) *}_{n'_2 \vb{k}}$ over $i$, 
-which then results in $\delta_{n_1' n_2'}$.
-The $i \neq j$ terms evaluate as 
-\[
-    \sum_{i \neq j}^N 
+    &\quad \sum_n^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{n n'_2} (\vb{k}, \vb{q}, \vb{G}) \\
+    &= \sum_{i , j}^N 
     c^{(i)}_{n'_1 \vb{k}} c^{(j) *}_{n'_2 \vb{k}}
     \sum_{n}^{\text{occ}} 
-    c_{n \vb{k} + \vb{q}}^*(\vb{G} + \vb{G}^{(i)}_{n' \vb{k}})
-    c_{n \vb{k} + \vb{q}}  (\vb{G} + \vb{G}^{(j)}_{n' \vb{k}}) 
-    \approx \sum_{i \neq j}^N  c^{(i)}_{n'_1 \vb{k}} c^{(j) *}_{n'_2 \vb{k}} \delta_{ij} = 0.
-\]
-In the first step we again use the argument used to prove \eqref{eq:approx-completeness}.
+    c_{n \vb{k} + \vb{q}}^*(\vb{G} + \vb{G}^{(i)}_{S \vb{k}})
+    c_{n \vb{k} + \vb{q}}  (\vb{G} + \vb{G}^{(j)}_{S \vb{k}}) \\
+    &\approx \sum_{i , j}^N  c^{(i)}_{n'_1 \vb{k}} c^{(j) *}_{n'_2 \vb{k}} \delta_{ij} = \delta_{n_1' n_2'}.
+    \end{aligned}
+\end{equation}
+In the third step we argue that the summation over the occupied states leads to an approximate orthogonal relation,
+because the subspace spanned by the dominant $\vb{G}$ components of the occupied states 
+is expected to largely overlap with the subspace of the occupied states.
+Therefore, the unwanted non-diagonal terms in \eqref{eq:chi-pseudobands} can be ignored when $\vb{G} = \vb{G}'$.
+The 
+
+which justifies the validity of the pseudobands technique for high-energy bands.
 
 
-Numerical TODO list: 
-\begin{itemize}
-    \item $\chi_{\vb{G} \vb{G}'}$: diagonal, or not? Yes, it seems.
-    \item Do different bands contain different $\vb{G}$ vectors?
-\end{itemize}
 
 \end{document}
