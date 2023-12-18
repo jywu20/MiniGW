@@ -95,7 +95,7 @@
 \maketitle
 
 
-\section{A review at $GW$}
+\section{A review of $GW$}
 
 \begin{frame}[allowframebreaks]
 \frametitle{$GW$ in momentum space}
@@ -170,7 +170,7 @@ $\scriptstyle M_{n n'}(\vb{k}, \vb{q}, \vb{G}) = \mel*{n \vb{k} + \vb{q}}{\ee^{\
 Note that $\chi$ and $\Sigma_{nn'}^{\text{CH}}$ involve summation over high energy states 
 (with or without GPP)
 
-\textbf{One bottleneck of $GW$ in momentum space}
+\textbf{A major bottleneck of $GW$ in momentum space}
 
 \end{frame}
 
@@ -423,7 +423,7 @@ but since the terms's random phases cancel each other so the overall sum after $
 
 \end{frame}
 
-\begin{frame}
+\begin{frame}[allowframebreaks]
 \frametitle{Cancellation of cross-terms in $\chi$}
 
 $\scriptstyle M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}')$ and $n$ (occupied band index), when $n_1' \neq n_2'$:
@@ -433,7 +433,55 @@ $\scriptstyle M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \
 
 \faHandPointRight Although for a single $n$, the value can be large, 
 as we sum over $n$ the terms cancel each other $\Rightarrow$
-diagonal $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}')$ 
+diagonal $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}')$
+
+\textbf{Why is this the case?}
+
+\textbf{Case 1: $\ket*{n \vb{k}} \propto \ee^{\ii (\vb{G}_n + \vb{k}) \cdot \vb{r}}$} For high-energy bands primarily containing only one $\vb{G}$ components, 
+unwanted terms are:
+\[
+    \sum_n^{\text{occ}} M_{n n_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn_2} (\vb{k}, \vb{q}, \vb{G})
+    = \sum_n^{\text{occ}} c_{n \vb{k}+\vb{q}}(\vb{G} + \vb{G}_1)^* c_{n \vb{k} + \vb{q}}(\vb{G} + \vb{G}_2)
+\]
+
+The terms rapid fast when $\vb{G}_1 \neq \vb{G}_2$:
+
+\framebreak
+
+\textbf{Case 2: $\ket*{n \vb{k}}$ contains several $\vb{G}$ components} suppose high-energy bands $n_{1, 2}$ primarily contain two $\vb{G}$ components:
+\begin{equation}
+    \ket*{n_{i} \vb{k}} = (c_{i1} \ket*{\vb{G}_1} + c_{i2} \ket*{\vb{G}_2})  \ee^{\ii \vb{k} \cdot \vb{r}}, \quad i = 1, 2.
+\end{equation}
+
+In this way 
+\[
+    \begin{aligned}
+        &\quad \sum_n^{\text{occ}} M_{n n_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn_2} (\vb{k}, \vb{q}, \vb{G}) \\
+        &= \sum_n^{\text{occ}} (c_{11} c_{n \vb{k} + \vb{q}}^*(\vb{G} + \vb{G}_1) 
+        + c_{12} c_{n \vb{k} + \vb{q}}^*(\vb{G} + \vb{G}_2) ) \times \\
+         &\quad \quad (c_{21}^* c_{n \vb{k} + \vb{q}}(\vb{G} + \vb{G}_1) 
+         + c_{22}^* c_{n \vb{k} + \vb{q}}(\vb{G} + \vb{G}_2)).
+    \end{aligned}
+\]
+
+The following terms vanish:
+\[
+    \sum_n^{\text{occ}} (c_{11} c_{21}^* \abs*{c_{n \vb{k} + \vb{q}}(\vb{G} + \vb{G}_1)}^2 
+    + c_{12} c_{22}^* \abs*{c_{n \vb{k} + \vb{q}}(\vb{G} + \vb{G}_2)}^2 )
+\] 
+\begin{enumerate}
+    \item After summation over $n$, $\sum_n \abs*{c_{n \vb{k} + \vb{q}}(\vb{G} + \vb{G}_1)}^2  = \sum_n \abs*{c_{n \vb{k} + \vb{q}}(\vb{G} + \vb{G}_2)}^2 $
+    \item Orthogonal relation: $c_{11} c_{21}^* + c_{12} c_{22}^* = 0.$
+\end{enumerate}
+
+The other terms 
+\[
+    \sum_n^{\text{occ}} (
+        c_{11} c_{22}^* c_{n \vb{k} + \vb{q}}^*(\vb{G} + \vb{G}_1)  c_{n \vb{k} + \vb{q}}(\vb{G} + \vb{G}_2) + 
+        c_{12} c_{21}^* c_{n \vb{k} + \vb{q}}^*(\vb{G} + \vb{G}_2) c_{n \vb{k} + \vb{q}}(\vb{G} + \vb{G}_1) 
+    )
+\]
+oscillate in the same way in the first case.
 
 \end{frame}
 
@@ -557,6 +605,22 @@ bands near Fermi surface can also be pseudo-ized
 They also claim that for \shortcode{sigma}, only the bands near Fermi surface shouldn't be pseudo-ized.
 
 \textbf{Important claim: protection window is not a convergence parameter.} 
+
+\end{frame}
+
+\section{Discussion}
+
+\begin{frame}
+\frametitle{Discussion}
+    
+\textbf{Implications to $GW$ acceleration} There are lots of garbage in the giant input files we feed to $GW$
+
+\textbf{Implications to machine learning} There exists a \emph{analytic} relation between $\Sigma^{GW}$ and $\{\bar{E}, \ket*{\phi_{\vb{k}}}^{\text{pseudo}} \}_{\text{blocks}}$
+
+\begin{itemize}
+    \item Starting from pseudobands is \emph{not} feature engineering
+    \item Pseudobands (with further compression of autoencoders) should be the starting point of all ML tasks
+\end{itemize}
 
 \end{frame}
 

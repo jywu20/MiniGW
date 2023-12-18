@@ -1,0 +1,222 @@
+\documentclass[hyperref, a4paper]{article}
+
+\usepackage{textgreek}
+\usepackage{geometry}
+\usepackage{titling}
+\usepackage{titlesec}
+\usepackage{footnote}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{bbm}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{physics}
+\usepackage{tensor}
+\usepackage{siunitx}
+\usepackage[version=4]{mhchem}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{autobreak}
+\usepackage[colorlinks,unicode]{hyperref} % , linkcolor=black, anchorcolor=black, citecolor=black, urlcolor=black, filecolor=black
+\usepackage{xurl}
+\usepackage[most]{tcolorbox}
+\usepackage[backend=bibtex,sorting=none,doi=false,isbn=false,url=false]{biblatex}
+\addbibresource{monolayer-WTe2.bib}
+\addbibresource{methods.bib}
+
+\usepackage{prettyref}
+
+% Page style; to be removed when this article is placed in another template
+\geometry{left=3.18cm,right=3.18cm,top=2.54cm,bottom=2.54cm}
+\titlespacing{\paragraph}{0pt}{1pt}{10pt}[20pt]
+\setlength{\droptitle}{-5em}
+
+
+% Math operators
+\DeclareMathOperator{\timeorder}{\mathcal{T}}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\legpoly}{P}
+\DeclareMathOperator{\primevalue}{P}
+\DeclareMathOperator{\sgn}{sgn}
+\newcommand*{\ii}{\mathrm{i}}
+\newcommand*{\ee}{\mathrm{e}}
+\newcommand*{\const}{\mathrm{const}}
+\newcommand*{\suchthat}{\quad \text{s.t.} \quad}
+\newcommand*{\argmin}{\arg\min}
+\newcommand*{\argmax}{\arg\max}
+\newcommand*{\normalorder}[1]{: #1 :}
+\newcommand*{\pair}[1]{\langle #1 \rangle}
+\newcommand*{\fd}[1]{\mathcal{D} #1}
+\DeclareMathOperator{\bigO}{\mathcal{O}}
+
+
+% Embedded codes
+\lstdefinestyle{console}{
+    basicstyle=\footnotesize\ttfamily,
+    breaklines=true,
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space}
+}
+
+% Reference formatting
+\newrefformat{fig}{Fig.~\ref{#1}}
+\newrefformat{tbl}{Table~\ref{#1}}
+
+% TiKZ settings
+\usetikzlibrary{calc}
+\tikzset{every picture/.style={line width=0.3pt}} 
+
+% Displaying chemical formula in bookmarkers
+
+\pdfstringdefDisableCommands{%
+  \def\\{}%
+  \def\ce#1{<#1>}%
+}
+
+\pdfstringdefDisableCommands{%
+  \def\texttt#1{<#1>}%
+  \def\mathbb#1{#1}%
+}
+\pdfstringdefDisableCommands{\def\eqref#1{(\ref{#1})}}
+
+\makeatletter
+\pdfstringdefDisableCommands{\let\HyPsd@CatcodeWarning\@gobble}
+\makeatother
+
+
+
+\newcommand{\citetime}[1]{item \ref{#1} in \prettyref{sec:timeline}}
+\newcommand{\address}[1]{\href{#1}{\url{#1}}}
+\newcommand{\shortcode}[1]{\texttt{#1}}
+
+\DeclareSIUnit{\au}{a.u.}
+
+\lstset{style = console}
+
+% Labels 
+\newcommand{\strainplot}{\prettyref{fig:one-shot}(d)}
+\newcommand{\strainband}{\prettyref{fig:one-shot}(f)}
+\newcommand{\nostrainband}{\prettyref{fig:one-shot}(e)}
+\newcommand{\overlap}{\prettyref{fig:overlap}}
+
+\title{Supplementary material}
+\author{Bowen Hou, Jinyuan Wu, Xingzhi Sun, Smita Krishnaswamy, and Diana Y. Qiu}
+
+\begin{document}
+
+\maketitle
+
+\begin{equation}
+    M_{nn'}(\vb{k}, \vb{q}, \vb{G}) = \mel*{n \vb{k} + \vb{q}}{\ee^{\ii (\vb{q} + \vb{G}) \cdot \vb{r}}}{n' \vb{k}}
+\end{equation}
+
+\begin{equation}
+    \chi_{\vb{G} \vb{G}'}(\vb{q}, \omega = 0)
+    = \sum_{\vb{k}} \sum_{n}^{\text{occ}} \sum_{n'}^{\text{emp}} 
+    M_{n n'} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'} (\vb{k}, \vb{q}, \vb{G}') 
+    \frac{
+        2
+    }{
+        E_{n \vb{k} + \vb{q}} - E_{n' \vb{k}} 
+    }
+\end{equation}
+
+In the conventional pseudobands technique, 
+the empty states are divided into one low-energy protected subspace 
+and a series of pseudobands blocks; 
+each of the blocks contain bands with comparable energies.
+
+\begin{equation}
+    \chi^{\text{P.B. blocks}}_{\vb{G} \vb{G}'}(\vb{q}, \omega = 0)
+    = \sum_{\vb{k}}  \sum_{S}^{\text{P.B. terms}} \frac{
+        2
+    }{
+        E_{n \vb{k} + \vb{q}} - \bar{E}_S 
+    } 
+    \sum_{n_1', n_2'}^{S} \sum_{n}^{\text{occ}}
+    M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}') 
+\end{equation}
+
+In each block, we may see states containing a primary $\vb{G}$ component, 
+\begin{equation}
+    \braket*{\vb{r}}{n' \vb{k}} = \ee^{\ii \theta_{n' \vb{k}}} \ee^{\ii (\vb{k} + \vb{G}_{n'}) \cdot \vb{r}}, 
+\end{equation}
+or $N$ degenerate states containing $N$ primary $\vb{G}$ components
+\begin{equation}
+    \braket*{\vb{r}}{n' \vb{k}} = \sum_i c_i \ee^{\ii (\vb{k} + \vb{G}_i) \cdot \vb{r}}.
+\end{equation}
+The latter case is due to symmetry.
+
+When $n_1', n_2'$ both contain only one primary $\vb{G}$ component, and therefore
+\begin{equation}
+    M_{nn'}(\vb{k}, \vb{q}, \vb{G}) = \ee^{\ii \theta_{n' \vb{k}}} c^*_{n \vb{k} + \vb{q}}(\vb{G} + \vb{G}_{n'}).
+\end{equation}
+their contribution to $\chi$ is proportional to 
+\begin{equation}
+    \sum_n^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{n n'_2} (\vb{k}, \vb{q}, \vb{G}) 
+    = \sum_n^{\text{occ}} c^*_{n \vb{k} + \vb{q}}(\vb{G} + \vb{G}_{n'_1}) c_{n \vb{k} + \vb{q}}(\vb{G} + \vb{G}_{n'_2})
+    \approx \delta_{n_1' n_2'}.
+    \label{eq:approx-completeness}
+\end{equation}
+The right hand side likely becomes $\delta_{n_1' n_2'}$ after the summation, 
+because the subspace spanned by the dominant $\vb{G}$ components of the occupied states 
+is expected to largely overlap with the subspace of the occupied states.
+
+\begin{equation}
+    \braket*{\vb{r}}{n' \vb{k}} = \frac{1}{\sqrt{N}} \sum_i^N 
+    c_{n' \vb{k}}^{(i)} \ee^{\ii (\vb{k} + \vb{G}^{(i)}_{n' \vb{k}}) \cdot \vb{r}}, \quad 
+    \abs*{c_{n' \vb{k}}^{(i)}}^2 = 1, \quad 
+    \sum_{i}^{N} c^{(i)}_{n'_1 \vb{k}} c^{(i)*}_{n'_2 \vb{k}} = N \delta_{n'_1 n'_2}.
+\end{equation}
+Here since we assume $\ket*{n_1' \vb{k}}$ and $n_2' \vb{k}$ 
+share the same set of predominant $\vb{G}$ vectors, 
+we replace $\vb{G}^{(i)}_{n'_{1, 2} \vb{k}}$ by $\vb{G}^{(i)}_{n' \vb{k}}$
+(and the order of the $\vb{G}$ vectors are also set the same for $n_1'$ and $n_2'$), 
+and thus 
+\begin{equation}
+    \begin{aligned}
+    &\quad \sum_{n_1'n _2'}^S \sum_n^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{n n'_2} (\vb{k}, \vb{q}, \vb{G}) \\
+    &= \frac{1}{N} \sum_{i, j}^N \sum_{n}^{\text{occ}} 
+    c^{(i)}_{n'_1 \vb{k}} c^{(j) *}_{n'_2 \vb{k}}
+    c_{n \vb{k} + \vb{q}}^*(\vb{G} + \vb{G}^{(i)}_{n' \vb{k}})
+    c_{n \vb{k} + \vb{q}}  (\vb{G} + \vb{G}^{(j)}_{n' \vb{k}}) .
+    \end{aligned}
+\end{equation}
+The $i = j$ terms evaluate as 
+\begin{equation}
+    \sum_{i}^N \sum_{n}^{\text{occ}} 
+    c^{(i)}_{n'_1 \vb{k}} c^{(i) *}_{n'_2 \vb{k}}
+    \abs{c_{n \vb{k} + \vb{q}}^*(\vb{G} + \vb{G}^{(i)}_{n' \vb{k}})}^2 \propto \delta_{n_1' n_2'}.
+\end{equation}
+Note that the $\vb{G}^{(i)}_{n' \vb{k}}$ components are connected by symmetry operations, 
+and we have 
+\[
+    \abs{c_{n \vb{k} + \vb{q}}^*(\vb{G} + \vb{G}^{(i)}_{n' \vb{k}})}^2 = \const
+\]
+for $1 \leq i \leq N$, 
+and therefore the above equation is just a constant times 
+the summation of $c^{(i)}_{n'_1 \vb{k}} c^{(i) *}_{n'_2 \vb{k}}$ over $i$, 
+which then results in $\delta_{n_1' n_2'}$.
+The $i \neq j$ terms evaluate as 
+\[
+    \sum_{i \neq j}^N 
+    c^{(i)}_{n'_1 \vb{k}} c^{(j) *}_{n'_2 \vb{k}}
+    \sum_{n}^{\text{occ}} 
+    c_{n \vb{k} + \vb{q}}^*(\vb{G} + \vb{G}^{(i)}_{n' \vb{k}})
+    c_{n \vb{k} + \vb{q}}  (\vb{G} + \vb{G}^{(j)}_{n' \vb{k}}) 
+    \approx \sum_{i \neq j}^N  c^{(i)}_{n'_1 \vb{k}} c^{(j) *}_{n'_2 \vb{k}} \delta_{ij} = 0.
+\]
+In the first step we again use the argument used to prove \eqref{eq:approx-completeness}.
+
+
+Numerical TODO list: 
+\begin{itemize}
+    \item $\chi_{\vb{G} \vb{G}'}$: diagonal, or not? Yes, it seems.
+    \item Do different bands contain different $\vb{G}$ vectors?
+\end{itemize}
+
+\end{document}
