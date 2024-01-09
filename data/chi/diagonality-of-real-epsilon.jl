@@ -6,7 +6,7 @@ fid = h5open("/pscratch/sd/j/jywu/WTe2-xy-relaxed/1-epsilon/epsmat.h5")
 eps_dataset = fid["/mats/matrix"]
 
 q_idx = 12 
-G_idx_range = 500 : 600
+G_idx_range = 1 : 100 
 heatmap(G_idx_range, G_idx_range, 
     abs.(eps_dataset[1, G_idx_range, G_idx_range, 1, 1, q_idx])',
     aspect_ratio = :equal, 
