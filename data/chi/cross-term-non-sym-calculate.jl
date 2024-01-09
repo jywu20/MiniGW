@@ -9,14 +9,23 @@ wfn = BerkeleyGWSpinorWaveFunction("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-
 
 n_range = 1:120
 n′_range = 1951:2000
-G_idx = 810 
-G′_idx = 1000 
-k_idx = 2
-q_idx = 3
+G_idx = 200
+G′_idx = 204 
+k_idx = 32
+q_idx = 100
 
 @time M_nn′_G  = transition_matrix_irreducible_1BZ(wfn, n_range, n′_range, k_idx, q_idx, G_idx)
 @time M_nn′_G′ = transition_matrix_irreducible_1BZ(wfn, n_range, n′_range, k_idx, q_idx, G′_idx)
 
+function ∑_k_MM′(G_idx, G′_idx, q_idx, n_range, n′_range, k_range)
+    progress = Progress(length(k_range))
+    sum(k_range) do k_idx
+        next!(progress)
+        M_nn′_G  = transition_matrix_irreducible_1BZ(wfn, n_range, n′_range, k_idx, q_idx, G_idx)
+        M_nn′_G′ = transition_matrix_irreducible_1BZ(wfn, n_range, n′_range, k_idx, q_idx, G′_idx)
+        M_nn′_G' * M_nn′_G′
+    end
+end
 
 let p = heatmap(
     n′_range, n′_range, 
@@ -29,6 +38,20 @@ let p = heatmap(
     ylims!(p, plot_range)
     savefig(p, 
         "nc_range-$(first(n′_range))-$(last(n′_range))-k_idx-$k_idx-q_idx-$q_idx-G1_idx-$G_idx-G2_idx-$G′_idx.png")
+    p
+end
+
+let p = heatmap(
+    n′_range, n′_range, 
+    abs.(∑_k_MM′(G_idx, G′_idx, q_idx, n_range, n′_range, 1:120)), 
+    aspect_ratio = :equal,
+    dpi = 500)
+    
+    plot_range = (0.5 + first(n′_range), 0.5 + last(n′_range))
+    xlims!(p, plot_range)
+    ylims!(p, plot_range)
+    savefig(p, 
+        "nc_range-$(first(n′_range))-$(last(n′_range))-k_sum-q_idx-$q_idx-G1_idx-$G_idx-G2_idx-$G′_idx.png")
     p
 end
 
