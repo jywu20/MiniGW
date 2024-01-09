@@ -234,16 +234,6 @@ For $E_{n \vb{k}} \gg E_{\text{F}}$:
     For $E_{n \vb{k}} \gg E_{\text{F}}$ ($\omega$):  
     $f_{1,2} \sim \const.$ for all $\vb{k}$.
     
-    \vspace{0.5cm}
-    
-    Thus in both $\chi$ and $\Sigma^{\text{CH}}$: 
-    \begin{equation*}
-        \begin{aligned}
-            &\quad \sum_{n''}^{\text{high emp.}} M_{n'' n}^* M_{n'' n'} \times f(E_{n'' \vb{k}}) \\
-            &= \sum_{\text{block $n_{\text{b}}$}}^{\text{high emp.}} f(\bar{E}_{n_{\text{b}}}) \sum_{n''}^{\text{block $n_{\text{b}}$}}
-            M_{n'' n}^* M_{n'' n'}.
-        \end{aligned}
-    \end{equation*}
 }
 
 \end{column}
@@ -262,6 +252,19 @@ For $E_{n \vb{k}} \gg E_{\text{F}}$:
 \end{column}
 
 \end{columns}
+
+\only<3>{
+    \vspace{0.5cm}
+    
+    Thus in both $\chi$ and $\Sigma^{\text{CH}}$: 
+    \begin{equation*}
+        \begin{aligned}
+             \sum_{n''}^{\text{high emp.}} M_{n'' n}^* M_{n'' n'} \times f(E_{n'' \vb{k}}) 
+            = \sum_{\text{block $n_{\text{b}}$}}^{\text{high emp.}} f(\bar{E}_{n_{\text{b}}}) \sum_{n''}^{\text{block $n_{\text{b}}$}}
+            M_{n'' n}^* M_{n'' n'}.
+        \end{aligned}
+    \end{equation*}
+}
 
 \end{frame}
 
@@ -344,65 +347,101 @@ Using \shortcode{StaticArrays.jl} helps a lot!
 \begin{frame}
 \frametitle{$\chi$ revisited}
 
-Under GPP:
-\begin{equation*}
+\begin{columns}
+
+\begin{column}{0.5\textwidth}
+    Under GPP:
+    \small
+    \begin{equation*}
     \begin{aligned}
-        \chi_{\vb{G} \vb{G}'}(\vb{q}, \omega=0)^{\text{high band terms}}
-        \approx \sum_{\vb{k}} \sum_{\text{block $n_{\text{b}}$}}^{\text{emp}} 
+        &\quad \chi_{\vb{G} \vb{G}'}(\vb{q}, \omega=0)^{\text{high band terms}} \\
+        &\approx \sum_{\vb{k}} \sum_{\text{block $n_{\text{b}}$}}^{\text{emp}} 
         \frac{
             2
         }{
             E_{n, \vb{k} + \vb{q}} - E_{\text{average in block $n_{\text{b}}$}} 
         } \\
-        \times \sum_{n' \in \text{block $n_{\text{b}}$}} \sum_{n}^{\text{occ}} 
+        &\quad \times \sum_{n' \in \text{block $n_{\text{b}}$}} \sum_{n}^{\text{occ}} 
         M_{n n'} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'} (\vb{k}, \vb{q}, \vb{G}') 
     \end{aligned}
-\end{equation*}
+    \end{equation*}
+    \normalsize
 
-\vspace{0.5cm}
+    \only<1>{
+        \textbf{Our goal} Show that  
+        \begin{equation*}
+            \sum_{n}^{\text{occ}} 
+                M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}') 
+        \end{equation*}
+        is diagonal for \shortcode{pseudobands} to work.
+    }
 
-\textbf{Our goal} \emph{Finding how diagonal is}
-\begin{equation*}
-    \sum_{n}^{\text{occ}} 
-        M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}') 
-\end{equation*}
-It should be diagonal for \shortcode{pseudobands} to work.
+    \only<2-4>{
+        For $\vb{G} = \vb{G}'$, $\sum_{n}\limits^{\text{occ}} 
+        M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}') $
+        is diagonal.
+    }
+
+    \only<4>{
+        Strikingly, $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}')$ is still very diagonal for bands near Fermi surface!
+    }
+
+    \only<5>{
+        When $\vb{G} \neq \vb{G}'$, $\sum_{n}\limits^{\text{occ}} 
+        M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}') $
+        is not diagonal at all.
+    }
+    
+    \only<6>{
+        But after summing over $\vb{k}$ it becomes diagonal.
+    }
+\end{column}
+
+\begin{column}{0.5\textwidth}
+    
+\only<2>{
+    \begin{center}
+        \includegraphics[width=\textwidth]{../data/chi/nc_range-1951-2000-k_idx-1-q_idx-1-G_idx-810.png}
+    \end{center}
+
+    \small
+    The same \ce{WTe2} run, $\vb{G} = (0, 1, -14), \vb{k} = \vb{k}_2 = (0, 0.00, 0), \vb{q} = (0, 0.00, 0)$
+    \normalsize
+}
+
+\only<3>{
+    \begin{center}
+        \includegraphics[width=\textwidth]{../data/chi/nc_range-1951-2000-k_idx-2-q_idx-3-G_idx-810.png}
+    \end{center}
+    
+    \small
+    The same \ce{WTe2} run, $\vb{G} = (0, 1, -14), \vb{k} = \vb{k}_2 = (0, 0.05, 0), \vb{q} = (0, 0.10, 0)$
+    \normalsize
+}
+
+\only<4>{
+    \begin{center}
+        \includegraphics[width=\textwidth]{../data/chi/nc_range-121-150-k_idx-2-q_idx-3-G_idx-100.png}
+    \end{center}
+
+}
+
+\only<5>{
+    \begin{center}
+        \includegraphics[width=\textwidth]{../data/chi/nc_range-3939-4000-k_idx-2-q_idx-3-G1_idx-2000-G2_idx-2001.png}
+    \end{center}
+    
+}
+
+\end{column}
+
+\end{columns}
 
 \end{frame}
 
 \begin{frame}[allowframebreaks]
-\frametitle{Numerical charaterization of 
-$\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}') $}
+\frametitle{Numerical charaterization of }
 
-\textbf{Case 1: $\vb{G} = \vb{G}'$}  In this case $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}')$ is large and fairly diagonal
-
-\begin{center}
-    \includegraphics[width=0.6\textwidth]{../data/chi/nc_range-1951-2000-k_idx-1-q_idx-1-G_idx-810.png}
-\end{center}
-
-\textbf{Parameters} $\vb{G} = (0, 1, -14), \vb{k} = \vb{k}_2 = (0, 0.00, 0), \vb{q} = (0, 0.00, 0)$
-
-\framebreak
-
-\textbf{Case 1: $\vb{G} = \vb{G}'$}  In this case $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}')$ is large and fairly diagonal
-
-\begin{center}
-    \includegraphics[width=0.6\textwidth]{../data/chi/nc_range-1951-2000-k_idx-2-q_idx-3-G_idx-810.png}
-\end{center}
-
-\textbf{Parameters} $\vb{G} = (0, 1, -14), \vb{k} = \vb{k}_2 = (0, 0.05, 0), \vb{q} = (0, 0.10, 0)$
-
-\framebreak
-
-\textbf{Case 1: $\vb{G} = \vb{G}'$}  In this case $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}')$ is large and fairly diagonal
-
-\begin{center}
-    \includegraphics[width=0.6\textwidth]{../data/chi/nc_range-121-150-k_idx-2-q_idx-3-G_idx-100.png}
-\end{center}
-
-Strikingly, $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}')$ is still very diagonal for bands near Fermi surface!
-
-\framebreak
 
 \textbf{Case 2: $\vb{G} \neq \vb{G}'$} $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}')$ is very non-diagonal, 
 but since the terms's random phases cancel each other so the overall sum after $\sum_{n'}^{\text{emp}}$ is small
