@@ -1,4 +1,4 @@
-\documentclass[t]{beamer}
+\documentclass[t,aspectratio=169]{beamer}
 \usepackage{physics}
 \usepackage{amsmath}
 \usepackage{tikz}
@@ -100,7 +100,7 @@
 \begin{frame}[allowframebreaks]
 \frametitle{$GW$ in momentum space}
 
-\textbf{To be very concise\dots} $- \ii \Sigma \approx GW^{\text{RPA}} = \begin{gathered}
+$- \ii \Sigma \approx GW^{\text{RPA}} = \begin{gathered}
     \begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-0.65,xscale=0.65, baseline=(XXXX.south) ]
     \path (0,57);\path (87.33333587646484,0);\draw    ($(current bounding box.center)+(0,0.3em)$) node [anchor=south] (XXXX) {};
     %Straight Lines [id:da4779610823231175] 
@@ -114,62 +114,61 @@
     \draw  [draw opacity=0][dash pattern={on 1.69pt off 2.76pt}][line width=1.5]  (22.78,36.33) .. controls (23.05,23.96) and (33.2,14.05) .. (45.62,14.11) .. controls (58.08,14.17) and (68.16,24.25) .. (68.24,36.67) -- (45.51,36.84) -- cycle ; \draw  [color={rgb, 255:red, 0; green, 0; blue, 0 }  ,draw opacity=1 ][dash pattern={on 1.69pt off 2.76pt}][line width=1.5]  (22.78,36.33) .. controls (23.05,23.96) and (33.2,14.05) .. (45.62,14.11) .. controls (58.08,14.17) and (68.16,24.25) .. (68.24,36.67) ;  
     \end{tikzpicture}
 \end{gathered}$.
-
-\textbf{Assuming quasiparticles\dots} 
+In $\vb{k}$ space,
+$\scriptstyle M_{n n'}(\vb{k}, \vb{q}, \vb{G}) = \underbrace{
+    \scriptstyle
+    \mel*{n \vb{k} + \vb{q}}{\ee^{\ii (\vb{q} + \vb{G}) \cdot \vb{r}}}{n' \vb{k}}
+}_{\text{quasiparticle approx.}}$;
 $\scriptstyle v(\vb{q} + \vb{G}) = \frac{4\pi }{V \abs*{\vb{q} + \vb{G}}^2}$.
-$\scriptstyle \Sigma \stackrel{\int_{\text{contour}}}{=} \Sigma^{\text{CH}} + \Sigma^{\text{SX}}$,
-$\scriptstyle \epsilon_{\vb{G} \vb{G}'}(\vb{q}, \omega) = \delta_{\vb{G} \vb{G}'} - v(q + \vb{G}) \chi_{\vb{G} \vb{G}'}(\vb{q}, \omega)$, 
-$\scriptstyle M_{n n'}(\vb{k}, \vb{q}, \vb{G}) = \mel*{n \vb{k} + \vb{q}}{\ee^{\ii (\vb{q} + \vb{G}) \cdot \vb{r}}}{n' \vb{k}}$
+
+\textbf{In \shortcode{epsilon}} $\scriptstyle \epsilon_{\vb{G} \vb{G}'}(\vb{q}, \omega) = \delta_{\vb{G} \vb{G}'} - v(q + \vb{G}) \chi_{\vb{G} \vb{G}'}(\vb{q}, \omega)$, 
+\scriptsize
 \begin{equation*}
-    \scriptsize
+    \chi^{\text{r/a}}_{\vb{G} \vb{G}'}(\vb{q}, \omega)
+    = \sum_{\vb{k}} \sum_{n}^{\text{occ}} \sum_{n'}^{\text{emp}} 
+    M_{n n'} (\vb{k} \vb{q} \vb{G}) M^*_{nn'} (\vb{k}, \vb{q}, \vb{G}') 
+    \left(
+    \frac{
+        1
+    }{
+        \omega + E_{n, \vb{k} + \vb{q}} - E_{n' \vb{k}} \pm \ii 0^+
+    }
+    + \frac{
+        1
+    }{
+        - \omega + E_{n, \vb{k} + \vb{q}} - E_{n' \vb{k}} \mp \ii 0^+
+    }
+    \right).
+    \label{eq:chi}
+\end{equation*}
+\normalsize
+
+\vspace{-0.2cm}
+
+\textbf{In \shortcode{sigma}}  $\scriptstyle \Sigma \stackrel{\int_{\text{contour}}}{=} \Sigma^{\text{CH}} + \Sigma^{\text{SX}}$,
+\scriptsize
+\begin{equation*}
     \begin{aligned}
     \mel{n \vb{k}}{\Sigma^{\text{SX}}(\omega)}{n' \vb{k}} 
     &= - \sum_{n''}^{\text{occ}} \sum_{\vb{q} \vb{G} \vb{G}'}
-    M^*_{n'' n} (\vb{k}, - \vb{q}, - \vb{G}) M_{n'' n'} (\vb{k}, - \vb{q},  -\vb{G}') \\
-    &\quad\quad \times  \epsilon^{-1}_{\vb{G} \vb{G}'}(\vb{q}, \omega - E_{n'', \vb{k} - \vb{q}}) 
-    v(\vb{q} + \vb{G}') ,
+    M^*_{n'' n} (\vb{k}, - \vb{q}, - \vb{G}) M_{n'' n'} (\vb{k}, - \vb{q},  -\vb{G}') 
+    \epsilon^{-1}_{\vb{G} \vb{G}'}(\vb{q}, \omega - E_{n'', \vb{k} - \vb{q}}) 
+    v(\vb{q} + \vb{G}') \\
+    \mel{n \vb{k}}{\Sigma^{\text{CH}}(\omega)}{n' \vb{k}} 
+    &= \frac{\ii}{2\pi} \sum_{n''} \sum_{\vb{q} \vb{G} \vb{G}'} 
+    M^*_{n'' n} (\vb{k}, - \vb{q}, - \vb{G})  M_{n'' n'} (\vb{k}, - \vb{q},  -\vb{G}') 
+    \int_{0}^{\infty} 
+    \frac{
+    [\epsilon^{\text{r}}(\vb{q}, \omega') - \epsilon^{\text{a}}(\vb{q}, \omega')]_{\vb{G} \vb{G}'}^{-1} 
+    \dd{\omega'} 
+    }{\omega - E_{n \vb{k}} - \omega' + \ii 0^+ \sgn(E_{n \vb{k}})} v(\vb{q}+\vb{G}') .
     \end{aligned}
-    \label{eq:sex}
 \end{equation*}
-\begin{equation*}
-    \scriptsize
-    \begin{aligned}
-        \mel{n \vb{k}}{\Sigma^{\text{CH}}(\omega)}{n' \vb{k}} 
-        &= \frac{\ii}{2\pi} \sum_{n''} \sum_{\vb{q}, \vb{G}, \vb{G}'} 
-        M^*_{n'' n} (\vb{k}, - \vb{q}, - \vb{G})  M_{n'' n'} (\vb{k}, - \vb{q},  -\vb{G}') \\
-        & \times \int_{0}^{\infty} \dd{\omega'} 
-        \frac{
-            [\epsilon^{\text{r}}_{\vb{G} \vb{G}'}]^{-1} (\vb{q}, \omega')
-            - [\epsilon^{\text{a}}_{\vb{G} \vb{G}'}]^{-1} (\vb{q}, \omega') 
-        }{\omega - E_{n \vb{k}} - \omega' + \ii 0^+ \sgn(E_{n \vb{k}})} v(\vb{q}+\vb{G}') .
-    \end{aligned}
-    \label{eq:coh}
-\end{equation*}
-\begin{equation*}
-    \scriptsize
-    \begin{aligned}
-        \chi^{\text{r/a}}_{\vb{G} \vb{G}'}(\vb{q}, \omega)
-        &= \sum_{\vb{k}} \sum_{n}^{\text{occ}} \sum_{n'}^{\text{emp}} 
-        M_{n n'} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'} (\vb{k}, \vb{q}, \vb{G}') \\
-        &\times \left(
-        \frac{
-            1
-        }{
-            \omega + E_{n, \vb{k} + \vb{q}} - E_{n' \vb{k}} \pm \ii 0^+
-        }
-        + \frac{
-            1
-        }{
-            - \omega + E_{n, \vb{k} + \vb{q}} - E_{n' \vb{k}} \mp \ii 0^+
-        }
-        \right).
-    \end{aligned}
-    \label{eq:chi}
-\end{equation*}
+\normalsize
 
-Note that $\chi$ and $\Sigma_{nn'}^{\text{CH}}$ involve summation over high energy states 
-(with or without GPP)
+\vspace{-0.2cm}
 
+Infinite $\sum\limits^{\text{emp.}}$ in $\chi$ and $\Sigma_{nn'}^{\text{CH}}$:
 \textbf{A major bottleneck of $GW$ in momentum space}
 
 \end{frame}
@@ -199,63 +198,70 @@ For $E_{n \vb{k}} \gg E_{\text{F}}$:
 
 \section{\shortcode{pseudobands}, and when it works}
 
-\begin{frame}[allowframebreaks]
+\begin{frame}
 \frametitle{Understanding \shortcode{pseudobands}: energy averaging}
 
-\textbf{Observation} 
-\begin{itemize}
-    \item $\chi \sim M M^* \times \text{some-function}(E_{\text{emp}} - E_{\text{occ}})$;
-    \item $\Sigma^{\text{CH}} \sim M M^* \times \text{some-function}(\omega - E)$, \quad 
-    $\omega \sim E_{\text{F}}$.
-\end{itemize}
+\begin{columns}
+    
+\begin{column}{0.6\textwidth}
+\textbf{Flatness of high energy bands} 
 
-\vspace{0.5cm}
+\only<1-2>{
+    High-energy DFT bands of \ce{WTe2} monolayer 
+    (ONCV-SG15, 120 electrons; \SI{80}{Ry} cutoff, $20 \times 20 \times 1$ grid). 
+    $x$ axis = $\vb{k}$ index in irreducible 1BZ; 
+    fastest varying coordinate = $k_y$ 
+}
 
-\faHandPointRight For $E_{n \vb{k}} \gg E_{\text{F}}$ ($\omega$):  
-$\text{energy-dependent factors} \sim \const.$ for all $\vb{k}$.
+\only<1>{
+    \vspace{0.5cm}
+    
+    \faHandPointRight $n \sim 1000$: bands are generally flat 
+}
 
-\vspace{0.5cm}
+\only<2>{
+    \vspace{0.5cm}
 
-Thus for both $\chi$ and $\Sigma^{\text{CH}}$ involving summation over empty bands:
-\begin{equation*}
-    \sum_{n''}^{\text{high emp. bands}} M_{n'' n}^* M_{n'' n'} \times f(E_{n'' \vb{k}}) 
-    = \sum_{\text{block $n_{\text{b}}$}} f(\bar{E}_{n_{\text{b}}}) \sum_{n''}^{\text{block $n_{\text{b}}$}}
-    M_{n'' n}^* M_{n'' n'}.
-\end{equation*}
+    \faHandPointRight High-lying bands are more dispersive but since they are high, $1 / (E_{\text{emp}} - E_{\text{occ}})$ is still flat 
+}
 
+\only<3>{
+    \begin{itemize}
+        \item $\chi \sim M M^* \times f_1(E_{\text{emp}} - E_{\text{occ}})$;
+        \item $\Sigma^{\text{CH}} \sim M M^* \times f_2(\omega - E)$, \quad 
+        $\omega \sim E_{\text{F}}$.
+    \end{itemize}
+    For $E_{n \vb{k}} \gg E_{\text{F}}$ ($\omega$):  
+    $f_{1,2} \sim \const.$ for all $\vb{k}$.
+    
+    \vspace{0.5cm}
+    
+    Thus in both $\chi$ and $\Sigma^{\text{CH}}$: 
+    \begin{equation*}
+        \begin{aligned}
+            &\quad \sum_{n''}^{\text{high emp.}} M_{n'' n}^* M_{n'' n'} \times f(E_{n'' \vb{k}}) \\
+            &= \sum_{\text{block $n_{\text{b}}$}}^{\text{high emp.}} f(\bar{E}_{n_{\text{b}}}) \sum_{n''}^{\text{block $n_{\text{b}}$}}
+            M_{n'' n}^* M_{n'' n'}.
+        \end{aligned}
+    \end{equation*}
+}
 
-\framebreak
+\end{column}
 
-\begin{center}
-    \includegraphics[width=0.45\textwidth]{../data/energy/energies-different-blocks.png}
-    \includegraphics[width=0.45\textwidth]{../data/energy/energies-same-blocks-1062.png}
-\end{center}
+\begin{column}{0.4\textwidth}
+    \vspace{-1cm}
+    \begin{center}
+        \includegraphics[width=\textwidth]{../data/energy/energies-different-blocks.png}
+        \only<1>{    
+        \includegraphics[width=\textwidth]{../data/energy/energies-same-blocks-1062.png}
+        }
+        \only<2>{
+            \includegraphics[width=\textwidth]{../data/energy/energies-same-blocks-4000.png}
+        }
+    \end{center}    
+\end{column}
 
-\textbf{Example} High-energy DFT bands of \ce{WTe2} monolayer 
-(ONCV-SG15, 120 electrons; \SI{80}{Ry} cutoff, $20 \times 20 \times 1$ grid). 
-$x$ axis = $\vb{k}$ index in irreducible 1BZ; 
-fastest varying coordinate = $k_y$ 
-
-\vspace{0.5cm}
-
-\faHandPointRight $n \sim 1000$: bands are generally flat 
-
-\framebreak
-
-\begin{center}
-    \includegraphics[width=0.45\textwidth]{../data/energy/energies-different-blocks.png}
-    \includegraphics[width=0.45\textwidth]{../data/energy/energies-same-blocks-4000.png}
-\end{center}
-
-\textbf{Example} High-energy DFT bands of \ce{WTe2} monolayer 
-(ONCV-SG15, 120 electrons; \SI{80}{Ry} cutoff, $20 \times 20 \times 1$ grid). 
-$x$ axis = $\vb{k}$ index in irreducible 1BZ; 
-fastest varying coordinate = $k_y$ 
-
-\vspace{0.5cm}
-
-\faHandPointRight High-lying bands are more dispersive but since they are high, $1 / (E_{\text{emp}} - E_{\text{occ}})$ is still flat 
-
+\end{columns}
 
 \end{frame}
 
@@ -404,6 +410,7 @@ but since the terms's random phases cancel each other so the overall sum after $
 \begin{center}
     \includegraphics[width=0.6\textwidth]{../data/chi/nc_range-3939-4000-k_idx-2-q_idx-3-G1_idx-2000-G2_idx-2001.png}
 \end{center}
+
 
 \end{frame}
 
