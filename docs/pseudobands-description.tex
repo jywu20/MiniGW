@@ -1,0 +1,320 @@
+\documentclass[hyperref, a4paper]{article}
+
+\usepackage{textgreek}
+\usepackage{geometry}
+\usepackage{titling}
+\usepackage{titlesec}
+\usepackage{footnote}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{bbm}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{physics}
+\usepackage{tensor}
+\usepackage{siunitx}
+\usepackage[version=4]{mhchem}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{autobreak}
+\usepackage[colorlinks,unicode]{hyperref} % , linkcolor=black, anchorcolor=black, citecolor=black, urlcolor=black, filecolor=black
+\usepackage{xurl}
+\usepackage[most]{tcolorbox}
+\usepackage[backend=bibtex,sorting=none,doi=false,isbn=false,url=false]{biblatex}
+\addbibresource{gw-bse.bib}
+
+\usepackage{prettyref}
+
+% Page style; to be removed when this article is placed in another template
+\geometry{left=3.18cm,right=3.18cm,top=2.54cm,bottom=2.54cm}
+\titlespacing{\paragraph}{0pt}{1pt}{10pt}[20pt]
+\setlength{\droptitle}{-5em}
+
+
+% Math operators
+\DeclareMathOperator{\timeorder}{\mathcal{T}}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\legpoly}{P}
+\DeclareMathOperator{\primevalue}{P}
+\DeclareMathOperator{\sgn}{sgn}
+\newcommand*{\ii}{\mathrm{i}}
+\newcommand*{\ee}{\mathrm{e}}
+\newcommand*{\const}{\mathrm{const}}
+\newcommand*{\suchthat}{\quad \text{s.t.} \quad}
+\newcommand*{\argmin}{\arg\min}
+\newcommand*{\argmax}{\arg\max}
+\newcommand*{\normalorder}[1]{: #1 :}
+\newcommand*{\pair}[1]{\langle #1 \rangle}
+\newcommand*{\fd}[1]{\mathcal{D} #1}
+\DeclareMathOperator{\bigO}{\mathcal{O}}
+
+
+% Embedded codes
+\lstdefinestyle{console}{
+    basicstyle=\footnotesize\ttfamily,
+    breaklines=true,
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space}
+}
+
+% Reference formatting
+\newrefformat{fig}{Fig.~\ref{#1}}
+\newrefformat{tbl}{Table~\ref{#1}}
+
+% TiKZ settings
+\usetikzlibrary{calc}
+\tikzset{every picture/.style={line width=0.3pt}} 
+
+% Displaying chemical formula in bookmarkers
+
+\pdfstringdefDisableCommands{%
+  \def\\{}%
+  \def\ce#1{<#1>}%
+}
+
+\pdfstringdefDisableCommands{%
+  \def\texttt#1{<#1>}%
+  \def\mathbb#1{#1}%
+}
+\pdfstringdefDisableCommands{\def\eqref#1{(\ref{#1})}}
+
+\makeatletter
+\pdfstringdefDisableCommands{\let\HyPsd@CatcodeWarning\@gobble}
+\makeatother
+
+
+
+\newcommand{\citetime}[1]{item \ref{#1} in \prettyref{sec:timeline}}
+\newcommand{\address}[1]{\href{#1}{\url{#1}}}
+\newcommand{\shortcode}[1]{\texttt{#1}}
+
+\DeclareSIUnit{\au}{a.u.}
+
+\lstset{style = console}
+
+% Labels 
+\newcommand{\strainplot}{\prettyref{fig:one-shot}(d)}
+\newcommand{\strainband}{\prettyref{fig:one-shot}(f)}
+\newcommand{\nostrainband}{\prettyref{fig:one-shot}(e)}
+\newcommand{\overlap}{\prettyref{fig:overlap}}
+
+\title{Supplementary material}
+\author{Bowen Hou, Jinyuan Wu, Xingzhi Sun, Smita Krishnaswamy, and Diana Y. Qiu}
+
+\begin{document}
+
+\maketitle
+
+\section{Pseudobands and the physics behind our model}
+
+A $GW$ calculation under the generalized plasmon-pole (GPP) model
+involves the calculation of the zero-frequency dielectric matrix $\chi_{\vb{G} \vb{G}'}(\vb{q}, \omega = 0)$
+(done in \shortcode{epsilon} in BerkeleyGW)
+and the calculation of the screened-exchange (SX) and Coulomb hole (CH) part 
+of the single-electron self-energy 
+(done in \shortcode{sigma} in BerkeleyGW) \cite{deslippe2012berkeleygw}.
+Calculation of $\chi$ and $\Sigma^{\text{CH}}$ involves 
+summation over theoretically infinite bands, 
+which is a bottleneck of the performance of the procedure.
+The problem is usually handled by the pseudobands technique \cite{del2019large},
+in which the empty bands are divided into one low-energy protected subspace 
+and a series of pseudobands blocks; 
+each of the blocks contain bands with comparable energies.
+The energies of each block are then replaced by a single energy, 
+which is the average of the former, 
+and for each $\vb{k}$ point, 
+all $\ket*{n \vb{k}}$ states in the block $S$ is replaced by $\sum_n^S \ket*{n \vb{k}}$.
+In this way each pseudobands block is replaced by a flat band, 
+and at each $\vb{k}$ point we have an effective, unnormalized wave function;
+this band is known as a pseudoband. 
+The protected bands and the pseudobands are then fed to \shortcode{epsilon} and \shortcode{sigma}.
+In this section, I briefly discuss why this seemingly crude approximation works.
+
+The expression of the zero-frequency dielectric matrix is 
+\begin{equation}
+    \chi_{\vb{G} \vb{G}'}(\vb{q}, \omega = 0)
+    = \sum_{\vb{k}} \sum_{n}^{\text{occ}} \sum_{n'}^{\text{emp}} 
+    M_{n n'} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'} (\vb{k}, \vb{q}, \vb{G}') 
+    \frac{
+        2
+    }{
+        E_{n \vb{k} + \vb{q}} - E_{n' \vb{k}} 
+    },
+\end{equation}
+where 
+\begin{equation}
+    M_{nn'}(\vb{k}, \vb{q}, \vb{G}) = \mel*{n \vb{k} + \vb{q}}{\ee^{\ii (\vb{q} + \vb{G}) \cdot \vb{r}}}{n' \vb{k}}.
+\end{equation}
+When pseudobands is used,
+the high-energy terms in $\chi_{\vb{G} \vb{G}'}(\vb{q}, \omega = 0)$ are therefore replaced by  
+(P.B. means pseudobands)
+\begin{equation}
+    \chi^{\text{P.B. terms}}_{\vb{G} \vb{G}'}(\vb{q}, \omega = 0)
+    = \sum_{\vb{k}}  \sum_{S}^{\text{P.B. blocks}} \frac{
+        2
+    }{
+        E_{n \vb{k} + \vb{q}} - \bar{E}_S 
+    } 
+    \sum_{n_1', n_2'}^{S} \sum_{n}^{\text{occ}}
+    M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}') .
+    \label{eq:chi-pseudobands}
+\end{equation}
+To justify the pseudobands technique, 
+it is sufficient to show that the unwanted $n_1' \neq n_2'$ cross terms 
+that do not appear in the definition of $\chi$ vanish after the summations over $\vb{k}$ and $n$.
+
+Because the energies of states in each pseudobands block are comparable, 
+in each pseudobands block, the states share the same set of predominant $\vb{G}$ vectors.
+Thus the states in pseudobands block $S$ can be written as 
+\begin{equation}
+    \braket*{\vb{r}}{n' \vb{k}} = \frac{1}{\sqrt{V}} \sum_i^N 
+    c_{n' \vb{k}}(\vb{G}^{(i)}_{S \vb{k}}) \ee^{\ii (\vb{k} + \vb{G}^{(i)}_{S \vb{k}}) \cdot \vb{r}}, \quad 
+    \sum_{i}^{N} c_{n'_1 \vb{k}}(\vb{G}^{(i)}_{S \vb{k}}) c_{n'_2 \vb{k}}^* (\vb{G}^{(i)}_{S \vb{k}}) = \delta_{n'_1 n'_2},
+\end{equation}
+and therefore 
+\begin{equation}
+    M_{nn'}(\vb{k}, \vb{q}, \vb{G}) = \sum_{i}^{N} c_{n' \vb{k}}(\vb{G}^{(i)}_{S \vb{k}})  c_{n \vb{k} + \vb{q}}^*(\vb{G} + \vb{G}_{S \vb{k}}^{(i)}).
+\end{equation}
+The pseudobands approximation of the diagonal $\chi_{\vb{G} \vb{G}}$ components of the polarizability 
+is proportional to 
+\begin{equation}
+    \begin{aligned}
+    &\quad \sum_n^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{n n'_2} (\vb{k}, \vb{q}, \vb{G}) \\
+    &= \sum_{i , j}^N 
+    c_{n'_1 \vb{k}}(\vb{G}_{S \vb{k}}^{(i)}) 
+    c^{*}_{n'_2 \vb{k}}(\vb{G}_{S \vb{k}}^{(j)})
+    \sum_{n}^{\text{occ}} 
+    c_{n \vb{k} + \vb{q}}^*(\vb{G} + \vb{G}^{(i)}_{S \vb{k}})
+    c_{n \vb{k} + \vb{q}}  (\vb{G} + \vb{G}^{(j)}_{S \vb{k}}) \\
+    &\propto \sum_{i , j}^N  
+    c_{n'_1 \vb{k}}(\vb{G}^{(i)}_{S \vb{k}}) 
+    c^{*}_{n'_2 \vb{k}}(\vb{G}^{(j)}_{S \vb{k}}) \delta_{ij} = \delta_{n_1' n_2'}.
+    \end{aligned}
+\end{equation}
+In the third step we argue that the summation over the occupied states leads to 
+an approximate, non-normalized orthogonal relation,
+because the subspace spanned by the dominant $\vb{G}$ components of the occupied states 
+is expected to largely overlap with the subspace of the occupied states,
+and therefore although for $i=j$ terms, the summation over occupied $n$ is usually far less than one, 
+the fast oscillation of $i \neq j$ terms when $n$ changes quickly brings the summation to zero.
+Therefore, the unwanted non-diagonal terms in \eqref{eq:chi-pseudobands} 
+can be ignored when $\vb{G} = \vb{G}'$.
+
+For the $\vb{G} \neq \vb{G}'$ terms we similarly have 
+\begin{equation}
+    \begin{aligned}
+        &\quad \sum_n^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{n n'_2} (\vb{k}, \vb{q}, \vb{G}') \\
+        &= \sum_{i , j}^N 
+        c_{n'_1 \vb{k}}(\vb{G}_{S \vb{k}}^{(i)}) 
+        c^{*}_{n'_2 \vb{k}}(\vb{G}_{S \vb{k}}^{(j)})
+        \sum_{n}^{\text{occ}} 
+        c_{n \vb{k} + \vb{q}}^*(\vb{G}  + \vb{G}^{(i)}_{S \vb{k}})
+        c_{n \vb{k} + \vb{q}}  (\vb{G}' + \vb{G}^{(j)}_{S \vb{k}}) \\
+        &\propto \sum_{i , j}^N  
+        c_{n'_1 \vb{k}}(\vb{G}^{(i)}_{S \vb{k}}) 
+        c^{*}_{n'_2 \vb{k}}(\vb{G}^{(i)}_{S \vb{k}} + \vb{G} - \vb{G}') .
+    \end{aligned}
+\end{equation}
+Numerical experiments reveal that the unwanted $n_1' \neq n_2'$ terms in the  
+$\vb{G} \neq \vb{G}'$ components in the above equation 
+do not cancel each other; 
+the summation over $\vb{k}$ however could eliminate these terms.
+We note that the $1 / (E_{\text{v}} - E_{\text{c}})$ factor in \eqref{eq:chi-pseudobands} 
+is approximately a constant as $\vb{k}$ varies, 
+and therefore the summation over $\vb{k}$ in \eqref{eq:chi-pseudobands} 
+contains the following factor
+\begin{equation}
+    \sum_{\vb{k}} c_{n_1' \vb{k}}(\vb{G}^{(i)}) c^*_{n_2' \vb{k}}(\vb{G}^{(j)})
+    \propto \sum_{\vb{k}} \ee^{\ii \theta_{n_1' \vb{k}} - \ii \theta_{n_2' \vb{k}}}
+    \stackrel{N_{\vb{k}} \to \infty}{\longrightarrow} \delta_{n_1' n_2'},
+    \label{eq:convergence}
+\end{equation}
+where $\ee^{\ii \theta_{n \vb{k}}}$ is the random global phase factor 
+introduced in the diagonalization process,
+which changes much more rapidly than the rest part of $c_{n \vb{k}}$
+as $\vb{k}$ runs over the Brillouin zone sampling.
+In conclusion, the validity of the pseudobands technique for high-energy bands
+is well-justified for the whole $\chi_{\vb{G} \vb{G}'}(\vb{q}, \omega = 0)$
+because of the summation over $\vb{k}$ and/or $n$.
+
+The analysis of pseudobands in \shortcode{sigma} is more complicated
+because in the Coulomb hole part of the GPP self-energy
+%\begin{equation}
+%    \begin{aligned}
+%        \mel*{n \vb{k}}{\Sigma_{\mathrm{SX}}(E)}{n' \vb{k}} &=
+%        -\sum_{n^{\prime \prime}}^{\mathrm{occ}} \sum_{\vb{q} \vb{G} \vb{G}'} M_{n^{\prime \prime} n}^*(\vb{k},-\vb{q},-\vb{G}) M_{n^{\prime \prime} n^{\prime}}\left(\vb{k},-\vb{q},-\vb{G}^{\prime}\right) \\
+%        & \times\left[\epsilon_{\vb{G G}^{\prime}}\right]^{-1}\left(\vb{q} ; E-E_{n^{\prime \prime} \vb{k}-\vb{q}}\right) v\left(\vb{q}+\vb{G}^{\prime}\right)
+%        \end{aligned}
+%\end{equation}
+%and 
+\begin{equation}
+    \begin{aligned}
+        \left\langle n \mathbf{k}\left|\Sigma_{\text{C H}}(E)\right| n^{\prime} \mathbf{k}\right\rangle=\frac{1}{2} & \sum_{n^{\prime \prime}} \sum_{\mathbf{q G G}^{\prime}} M_{n^{\prime \prime} n}^*(\mathbf{k},-\mathbf{q},-\mathbf{G}) M_{n^{\prime \prime} n^{\prime}}\left(\mathbf{k},-\mathbf{q},-\mathbf{G}^{\prime}\right) \\
+        & \times \frac{\Omega_{\mathbf{G G}^{\prime}}^2(\mathbf{q})\left(1- \ii \tan \phi_{\mathbf{G G}^{\prime}}(\mathbf{q})\right)}{\tilde{\omega}_{\mathbf{G G}^{\prime}}(\mathbf{q})\left(E-E_{n^{\prime \prime} \mathbf{k}-\mathbf{q}}-\tilde{\omega}_{\mathbf{G G}^{\prime}}(\mathbf{q})\right)} v\left(\mathbf{q}+\mathbf{G}^{\prime}\right),
+    \end{aligned}
+    \label{eq:sigma-ch}
+\end{equation}
+where $\Omega_{\vb{G} \vb{G}'}$, $\tilde{\omega}_{\vb{G} \vb{G}'}$ and $\phi_{\vb{G} \vb{G}'}$
+are quantities calculated from $\chi_{\vb{G} \vb{G}'}(\vb{q}, \omega = 0)$ 
+and the momentum space ground state density $\rho(\vb{G})$.
+The right hand side contains complicated dependence on $\vb{q}$, $\vb{G}$ and $\vb{G}'$.
+However, note that when $n''$ is high and is within one of the pseudobands blocks,
+typically the magnitudes of $\vb{G}$ and $\vb{G}'$ are large enough 
+to dominate $v(\vb{q} + \vb{G}) = 4 \pi / \abs*{\vb{q} + \vb{G}}^2$, 
+and therefore the rapid variation of the random phase factor in $\ket*{n'' \vb{k} - \vb{q}}$ 
+compared with the relatively slow variance of second line of \eqref{eq:sigma-ch}
+as $\vb{q}$ runs over the Brillouin zone sampling
+again provides us with the opportunity to justify using pseudobands here:
+we have 
+\begin{equation}
+    \mel*{n \vb{k}}{\Sigma_{\text{CH}}^{\text{high energy bands}}(E)}{n' \vb{k}} \propto 
+    \sum_{\vb{G}, \vb{G}'} \sum_{n''}^{\text{high energy bands}} \sum_{\vb{q}} M^*_{n'' n}(\vb{k}, - \vb{q}, -\vb{G})
+    M_{n'' n'}(\vb{k}, - \vb{q}, - \vb{G}'),
+    \label{eq:high-energy-sigma-ch}
+\end{equation}
+and by applying the arguments in \eqref{eq:convergence}, 
+the pseudobands estimation of the high-energy terms in $\Sigma_{\text{CH}}$ is 
+\begin{equation}
+    \begin{aligned}
+        \mel*{n \vb{k}}{\Sigma_{\text{CH}}^{\text{P.B. terms}}(E)}{n' \vb{k}} &\propto 
+        \sum_{\vb{G}, \vb{G}'} \sum_{S}^{\text{P.B. blocks}} \sum_{n''_1, n''_2}^{S} \sum_{\vb{q}}
+        M^*_{n''_1 n}(\vb{k}, - \vb{q}, -\vb{G})
+        M_{n''_2 n'}(\vb{k}, - \vb{q}, - \vb{G}') \\
+        &\propto \sum_{\vb{q}} \ket*{n_1'' \vb{k} - \vb{q}} \bra*{n_2'' \vb{k} - \vb{q}}
+        \stackrel{N_{\vb{q}} \to \infty}{\propto} \delta_{n_1'' n_2''},
+    \end{aligned}
+\end{equation}
+and the unwanted $n_1'' \neq n_2''$ cross terms that do not appear in \eqref{eq:high-energy-sigma-ch} again vanish.
+
+The aforementioned fact that the random phase factor in DFT diagonalization 
+ensures the pseudobands technique can be further exploited by 
+\emph{intentionally} inserting random phase factors before $\ket*{n \vb{k}}$ states 
+for a given $\vb{k}$ point
+and replacing a pseudobands block by several flat unnormalized bands, 
+instead of just one such band;
+under such a scheme the size of pseudobands blocks can be drastically increased, 
+further improving the speed of the $GW$ methodology;
+specifically, an empirical observation is that 
+the valence bands can be pseudo-ized as well,
+and the protected subspace can be very small, 
+without any real damage to accuracy (TODO: cite Altman et al. forthcoming).
+
+The above discussion shows that there exists a relatively simple and smooth mapping
+from the protected bands, ground state density and pseudobands to the $GW$ energies.
+Even after the pseudobands procedure, 
+there are still hundred of (protected and pseudo) bands;
+in our model, we tentatively eliminate the protected subspace 
+and pseudo-ize all bands, 
+and also reduce the number of pseudobands subspaces to (TODO: 5??) for each material,
+hoping that given that the ground state electron density 
+in principle contains all information of the material,
+as shown by the foundation of DFT \cite{hohenberg1964inhomogeneous},
+having the ground state electron density somehow compensates for the information loss.
+
+\printbibliography
+
+\end{document}
