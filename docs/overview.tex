@@ -88,6 +88,7 @@
 
 %Information to be included in the title page:
 \title{Why \shortcode{pseudobands} works?}
+\subtitle{Numerical experiments, analysis, and possible enhancement of the method}
 \author{Jinyuan Wu}
 
 \begin{document}
@@ -354,15 +355,15 @@ Using \shortcode{StaticArrays.jl} helps a lot!
     \small
     \begin{equation*}
     \begin{aligned}
-        &\quad \chi_{\vb{G} \vb{G}'}(\vb{q}, \omega=0)^{\text{high band terms}} \\
+        &\quad \chi_{\vb{G} \vb{G}'}(\vb{q}, \omega=0)^{\text{pseudobands}} \\
         &\approx \sum_{\vb{k}} \sum_{\text{block $n_{\text{b}}$}}^{\text{emp}} 
         \frac{
             2
         }{
             E_{n, \vb{k} + \vb{q}} - E_{\text{average in block $n_{\text{b}}$}} 
         } \\
-        &\quad \times \sum_{n' \in \text{block $n_{\text{b}}$}} \sum_{n}^{\text{occ}} 
-        M_{n n'} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'} (\vb{k}, \vb{q}, \vb{G}') 
+        &\quad \times \sum_{n'_{1,2} \in \text{block $n_{\text{b}}$}} \sum_{n}^{\text{occ}} 
+        M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}') 
     \end{aligned}
     \end{equation*}
     \normalsize
@@ -393,7 +394,8 @@ Using \shortcode{StaticArrays.jl} helps a lot!
     }
     
     \only<6>{
-        But after summing over $\vb{k}$ it becomes diagonal.
+        But since $E_{n \vb{k} + \vb{q}} \ll E_{\text{average in block $n_{\text{b}}$}}$, the $1 / \Delta E$ factor is a constant w.r.t. $\vb{k}$, 
+        and after summing over $\vb{k}$, $MM^*$ becomes diagonal.
     }
 \end{column}
 
@@ -439,19 +441,6 @@ Using \shortcode{StaticArrays.jl} helps a lot!
 
 \end{frame}
 
-\begin{frame}[allowframebreaks]
-\frametitle{Numerical charaterization of }
-
-
-\textbf{Case 2: $\vb{G} \neq \vb{G}'$} $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}')$ is very non-diagonal, 
-but since the terms's random phases cancel each other so the overall sum after $\sum_{n'}^{\text{emp}}$ is small
-
-\begin{center}
-    \includegraphics[width=0.6\textwidth]{../data/chi/nc_range-3939-4000-k_idx-2-q_idx-3-G1_idx-2000-G2_idx-2001.png}
-\end{center}
-
-
-\end{frame}
 
 \begin{frame}
 \frametitle{Half-way generalization about \shortcode{pseudobands} in $\chi$}
@@ -469,68 +458,41 @@ but since the terms's random phases cancel each other so the overall sum after $
 
 \end{frame}
 
-\begin{frame}[allowframebreaks]
+\begin{frame}
 \frametitle{Cancellation of cross-terms in $\chi$}
 
-$\scriptstyle M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}')$ and $n$ (occupied band index), when $n_1' \neq n_2'$:
-\begin{center}
-    \includegraphics[width=0.6\textwidth]{../data/chi/nc-n1-2000-n2-1000-nv-1-120-k_idx-12-q_idx-37-G_idx-200.png}
-\end{center}
+\begin{columns}
+    
+\begin{column}{0.6\textwidth}
+    $y$ axis: $\scriptstyle M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}')$, $n_1' \neq n_2'$
+    $x$ axis: $n$ (occupied band index) 
+    \begin{center}
+        \includegraphics[width=\textwidth]{../data/chi/nc-n1-2000-n2-1000-nv-1-120-k_idx-12-q_idx-37-G_idx-200.png}
+    \end{center}    
+\end{column}
 
-\faHandPointRight Although for a single $n$, the value can be large, 
-as we sum over $n$ the terms cancel each other $\Rightarrow$
-diagonal $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}')$
+\begin{column}{0.4\textwidth}
+    \faHandPointRight For a single $n$, $MM^*$ can be large;
+    but they terms cancel each other $\Rightarrow$
+    diagonal $\scriptstyle \sum_{n}^{\text{occ}} M_{n n'_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn'_2} (\vb{k}, \vb{q}, \vb{G}')$
+    
+    \textbf{Why is this the case?}    
+    
+    \vspace{1cm}
+    
+    \faHandPointRight \textbf{The main reason: random phase factor in DFT diagonalization}
+\end{column}
 
-\textbf{Why is this the case?}
-
-\textbf{Case 1: $\ket*{n \vb{k}} \propto \ee^{\ii (\vb{G}_n + \vb{k}) \cdot \vb{r}}$} For high-energy bands primarily containing only one $\vb{G}$ components, 
-unwanted terms are:
-\[
-    \sum_n^{\text{occ}} M_{n n_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn_2} (\vb{k}, \vb{q}, \vb{G})
-    = \sum_n^{\text{occ}} c_{n \vb{k}+\vb{q}}(\vb{G} + \vb{G}_1)^* c_{n \vb{k} + \vb{q}}(\vb{G} + \vb{G}_2)
-\]
-
-The terms rapid fast when $\vb{G}_1 \neq \vb{G}_2$:
-
-\framebreak
-
-\textbf{Case 2: $\ket*{n \vb{k}}$ contains several $\vb{G}$ components} suppose high-energy bands $n_{1, 2}$ primarily contain two $\vb{G}$ components:
-\begin{equation}
-    \ket*{n_{i} \vb{k}} = (c_{i1} \ket*{\vb{G}_1} + c_{i2} \ket*{\vb{G}_2})  \ee^{\ii \vb{k} \cdot \vb{r}}, \quad i = 1, 2.
-\end{equation}
-
-In this way 
-\[
-    \begin{aligned}
-        &\quad \sum_n^{\text{occ}} M_{n n_1} (\vb{k}, \vb{q}, \vb{G}) M^*_{nn_2} (\vb{k}, \vb{q}, \vb{G}) \\
-        &= \sum_n^{\text{occ}} (c_{11} c_{n \vb{k} + \vb{q}}^*(\vb{G} + \vb{G}_1) 
-        + c_{12} c_{n \vb{k} + \vb{q}}^*(\vb{G} + \vb{G}_2) ) \times \\
-         &\quad \quad (c_{21}^* c_{n \vb{k} + \vb{q}}(\vb{G} + \vb{G}_1) 
-         + c_{22}^* c_{n \vb{k} + \vb{q}}(\vb{G} + \vb{G}_2)).
-    \end{aligned}
-\]
-
-The following terms vanish:
-\[
-    \sum_n^{\text{occ}} (c_{11} c_{21}^* \abs*{c_{n \vb{k} + \vb{q}}(\vb{G} + \vb{G}_1)}^2 
-    + c_{12} c_{22}^* \abs*{c_{n \vb{k} + \vb{q}}(\vb{G} + \vb{G}_2)}^2 )
-\] 
-\begin{enumerate}
-    \item After summation over $n$, $\sum_n \abs*{c_{n \vb{k} + \vb{q}}(\vb{G} + \vb{G}_1)}^2  = \sum_n \abs*{c_{n \vb{k} + \vb{q}}(\vb{G} + \vb{G}_2)}^2 $
-    \item Orthogonal relation: $c_{11} c_{21}^* + c_{12} c_{22}^* = 0.$
-\end{enumerate}
-
-The other terms 
-\[
-    \sum_n^{\text{occ}} (
-        c_{11} c_{22}^* c_{n \vb{k} + \vb{q}}^*(\vb{G} + \vb{G}_1)  c_{n \vb{k} + \vb{q}}(\vb{G} + \vb{G}_2) + 
-        c_{12} c_{21}^* c_{n \vb{k} + \vb{q}}^*(\vb{G} + \vb{G}_2) c_{n \vb{k} + \vb{q}}(\vb{G} + \vb{G}_1) 
-    )
-\]
-oscillate in the same way in the first case.
+\end{columns}
 
 \end{frame}
 
+\begin{frame}
+\frametitle{Cancellation of cross-terms in $\chi$}
+
+    
+
+\end{frame}
 
 \section{\shortcode{pseudobands} for $\Sigma$}
 
@@ -577,7 +539,7 @@ Only $\Sigma^{\text{CH}}$ involves $\sum^{\text{emp}}$:
 
 \end{frame}
 
-\section{Comments from Felipe H. Jornada's recent paper}
+\section{Enhancement of pseudobands: Felipe H. Jornada's recent paper}
 
 \begin{frame}
 \frametitle{``Stochastic'' pseudobands}
@@ -615,10 +577,13 @@ $\ee^{\ii \theta_{n \xi}}$ comes from DFT diagonalization
 \end{itemize}
 
 \textbf{Is this result enough as a justification?} My answer: no; 
-because the limits = not doing pseudobands at all. 
-(And their recommended values are not large enough anyway.)
+because the limits = not doing pseudobands at all;
+and their recommended values are not large enough anyway.
 
-\uncover<2->{\textbf{Additional justification} ``the polarizability tends to converge much faster than $G$, partially due to the \emph{rapidly oscillating nature} of the matrix elements involving Kohn-Sham states used in the evaluation of the polarizability''}
+\uncover<2->{\textbf{They also realized this} ``the polarizability tends to converge much faster than $G$, partially due to the \emph{rapidly oscillating nature} of the matrix elements involving Kohn-Sham states used in the evaluation of the polarizability''
+
+As is shown above.
+}
 
 \end{frame}
 
