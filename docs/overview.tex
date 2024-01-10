@@ -435,6 +435,13 @@ Using \shortcode{StaticArrays.jl} helps a lot!
     
 }
 
+\only<6>{
+    \begin{center}
+        \includegraphics[width=\textwidth]{../data/chi/nc_range-1951-2000-k_sum-q_idx-9-G1_idx-200-G2_idx-204.png}
+    \end{center}
+}
+
+
 \end{column}
 
 \end{columns}
@@ -490,7 +497,57 @@ Using \shortcode{StaticArrays.jl} helps a lot!
 \begin{frame}
 \frametitle{Cancellation of cross-terms in $\chi$}
 
+\begin{columns}
+
+\begin{column}{0.6\textwidth}
+\small
+\begin{equation*}
+    \begin{aligned}
+        &\quad \sum_{\vb{k}} \sum_{n}^{\text{occ}} M_{n n'_1}(\vb{k}, \vb{q}, \vb{G}) M_{n n'_2}^*(\vb{k}, \vb{q}, \vb{G}') \\
+        &= \sum_{\vb{k}} \sum_{n}^{\text{occ}} \sum_{\vb{G}_1 \vb{G}_2} 
+        c_{n \vb{k}+\vb{q}}^*(\vb{G} +\vb{G}_1)  c_{n_1' \vb{k}}(\vb{G}_1) 
+        c_{n \vb{k}+\vb{q}}  (\vb{G}'+\vb{G}_2) c_{n_2' \vb{k}}^*(\vb{G}_2) \\
+        \onslide<2->{
+            &= \sum_{\vb{k}} \sum_{\vb{G}_1 \vb{G}_2} c_{n_1' \vb{k}}(\vb{G}_1) c_{n_2' \vb{k}}^*(\vb{G}_2)
+            \textcolor[HTML]{4A90E2}{
+                \underbrace{
+                    \sum_{n}^{\text{occ}}  
+                    c_{n \vb{k}+\vb{q}}^*(\vb{G}+\vb{G}_1) c_{n \vb{k}+\vb{q}}  (\vb{G}'+\vb{G}_2) 
+                }_{\propto \delta_{\vb{G}_1 + \vb{G}, \vb{G}_2 + \vb{G}'} \text{ from approx. completeness}}            
+            } \\
+        }
+        \onslide<3->{
+            &\propto \sum_{\vb{G}_1} \sum_{\vb{k}} 
+            \textcolor[HTML]{9013FE}{
+                \underbrace{
+                c_{n_1' \vb{k}}(\vb{G}_1) c_{n_2' \vb{k}}^*(\vb{G}_1 + \vb{G} - \vb{G}') 
+                }_{\text{random phase cancellation}}
+            } 
+            \propto \delta_{n_1' n_2'}.
+        }
+    \end{aligned}
+\end{equation*}
+\normalsize
+\end{column}
+
+\begin{column}{0.35\textwidth} 
+    \onslide<2->{
+        \textcolor[HTML]{4A90E2}{In $\sum\limits_{n}^{\text{occ}}$: the number of $\vb{G}$ vectors making $c_{n \vb{k}}(\vb{G})$ non-zero 
+        isn't much larger than $N_{\text{occ}}$: 
+        we have an approximate, unnormalized completeness relation}
+    }
     
+    \vspace{1cm}
+
+    \onslide<3->{
+        \textcolor[HTML]{9013FE}{In $\sum_{\vb{k}}$: suppose $\theta_{n \vb{k}}$ is the random DFT diagonalization phase of $\ket*{\phi_{n \vb{k}}}$,
+        $\sum_{\vb{k}} \ee^{\ii (\theta_{n_1' \vb{k}} - \theta_{n_2' \vb{k}})} \propto \delta_{n_1' n_2'}$}
+    }
+\end{column}
+
+\end{columns}
+
+
 
 \end{frame}
 
@@ -500,42 +557,28 @@ Using \shortcode{StaticArrays.jl} helps a lot!
 \frametitle{$\Sigma^{\text{CH}}$ revisited}
 
 Only $\Sigma^{\text{CH}}$ involves $\sum^{\text{emp}}$:
+\scriptsize
 \begin{equation*}
-    \begin{aligned}
-        \mel*{n \vb{k}}{\Sigma^{\text{CH, GPP}}}{n' \vb{k}} 
-        &= \frac{1}{2} \sum_{n''} \sum_{\vb{q} \vb{G} \vb{G}'} M_{n'' n}^*(\vb{k}, - \vb{q}, -\vb{G})
-        M_{n'' n'}(\vb{k}, - \vb{q}, - \vb{G}') \times  \\
-        &\quad \quad \text{something about $\vb{q}, \vb{k}, \vb{G}, \vb{G}'$}
-    \end{aligned}
+    \mel{n \vb{k}}{\Sigma^{\text{CH}}(\omega)}{n' \vb{k}} 
+    = \frac{\ii}{2\pi} \sum_{n''} \sum_{\vb{q} \vb{G} \vb{G}'} 
+    M^*_{n'' n} (\vb{k}, - \vb{q}, - \vb{G})  M_{n'' n'} (\vb{k}, - \vb{q},  -\vb{G}') 
+    \int_{0}^{\infty} 
+    \frac{
+    [\epsilon^{\text{r}}(\vb{q}, \omega') - \epsilon^{\text{a}}(\vb{q}, \omega')]_{\vb{G} \vb{G}'}^{-1} 
+    \dd{\omega'} 
+    }{\omega - E_{n \vb{k}} - \omega' + \ii 0^+ \sgn(E_{n \vb{k}})} v(\vb{q}+\vb{G}')
     \label{eq:ch.simple}
 \end{equation*}
+\normalsize
 
 \textbf{Problems} \begin{itemize}
-    \item No summation over occupied states $\Rightarrow$ 
-    \xmark the aforementioned cancellation mechanism 
     \item Summation over $\vb{G}$ very complicated $\Rightarrow$
     analysis based on $\vb{G}$ very hard.
+    \item But at high empty bands, $\vb{G}'$ dominates $v(\vb{q} + \vb{G}')$ so the part besides $MM^*$ should be smooth w.r.t. $\vb{q}$
+    \item and the summation over $\vb{q}$ still leads to the desirable diagonality 
 \end{itemize}
 
-\end{frame}
-
-\begin{frame}[allowframebreaks]
-\frametitle{Some tentative ideas}
-
-\begin{itemize}
-    \item It has been verified that a single $M_{n''_1 n}^* M_{n''_2 n}$ term is never diagonal
-    \item But it seems naively summing over $\vb{G} = \vb{G}'$ (without considering the weight factor)
-    makes it diagonal\dots
-\end{itemize}    
-
-\begin{center}
-    \includegraphics[width=0.6\textwidth]{../data/sigma/nc_range-1800-1880-n_idx-119-n_prime_idx_119-k_idx-1-q_idx-1-G_range-800-900.png}
-\end{center}
-
-\begin{itemize}
-    \item $M_{n''_1 n}^*(\vb{G}_1) M_{n''_2 n}(\vb{G}_2)$ is not diagonal at all when $\vb{G}_1 \neq \vb{G}_2$; 
-    \item but probably only the $\vb{G}_1 = \vb{G}_2$ terms matter?
-\end{itemize}
+-- But I don't have my own implementation of \shortcode{sigma} so that's pure speculation.
 
 \end{frame}
 
@@ -576,9 +619,7 @@ $\ee^{\ii \theta_{n \xi}}$ comes from DFT diagonalization
     \item the standard error goes to zero.
 \end{itemize}
 
-\textbf{Is this result enough as a justification?} My answer: no; 
-because the limits = not doing pseudobands at all;
-and their recommended values are not large enough anyway.
+This convergence condition however is equivalent to not doing pseudobands at all\dots and their recommended values are not large enough anyway.
 
 \uncover<2->{\textbf{They also realized this} ``the polarizability tends to converge much faster than $G$, partially due to the \emph{rapidly oscillating nature} of the matrix elements involving Kohn-Sham states used in the evaluation of the polarizability''
 
@@ -608,14 +649,16 @@ Recall that band dispersion is the main problem\dots
 \begin{frame}
 \frametitle{Compressing the bands even harder: pseudobands near $E_{\text{F}}$?}
 
-They claim that for \shortcode{epsilon}, 
-bands near Fermi surface can also be pseudo-ized 
+They claim that 
+\begin{itemize}
+    \item for \shortcode{epsilon}, bands near Fermi surface can also be pseudo-ized;
+    \item for \shortcode{sigma}, only the bands near Fermi surface shouldn't be pseudo-ized.
+\end{itemize}
 
-\emph{It somehow goes against my own numerical experiments; but they are quite sure about that hmm\dots}
+\textbf{Important claim: protection window is not a convergence parameter: just protect a handful of bands and you're fine.} 
 
-They also claim that for \shortcode{sigma}, only the bands near Fermi surface shouldn't be pseudo-ized.
 
-\textbf{Important claim: protection window is not a convergence parameter.} 
+\emph{My own numerical experiments show that this is NOT the case when the band gap is very small so maybe a handful of bands still need to be protected.}
 
 \end{frame}
 
@@ -626,11 +669,11 @@ They also claim that for \shortcode{sigma}, only the bands near Fermi surface sh
     
 \textbf{Implications to $GW$ acceleration} There are lots of garbage in the giant input files we feed to $GW$
 
-\textbf{Implications to machine learning} There exists a \emph{analytic} relation between $\Sigma^{GW}$ and $\{\bar{E}, \ket*{\phi_{\vb{k}}}^{\text{pseudo}} \}_{\text{blocks}}$
+\textbf{Implications to machine learning} There exists an \emph{analytic} relation between $\epsilon^{\text{RPA}}, \Sigma^{GW}$ and $\{\bar{E}, \ket*{\phi_{\vb{k}}}^{\text{pseudo}} \}_{\text{blocks}}$
 
 \begin{itemize}
-    \item Starting from pseudobands is \emph{not} feature engineering
     \item Pseudobands (with further compression of autoencoders) should be the starting point of all ML tasks
+    \item Starting from pseudobands is \emph{not} feature engineering
 \end{itemize}
 
 \end{frame}
