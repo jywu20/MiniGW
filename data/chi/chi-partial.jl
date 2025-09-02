@@ -6,7 +6,7 @@ using Plots
 include("../../src/MiniGW.jl")
 using .MiniGW
 
-wfn = BerkeleyGWSpinorWaveFunction("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
+wfn = BerkeleyGWSpinorWFN("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
 
 n_range = 1:120
 G_idx = 800 

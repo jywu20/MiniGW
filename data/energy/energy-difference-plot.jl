@@ -5,7 +5,7 @@ using Plots
 include("../../src/MiniGW.jl")
 using .MiniGW
 
-wfn = BerkeleyGWSpinorWaveFunction("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
+wfn = BerkeleyGWSpinorWFN("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
 
 let n_cs = [1000, 2000, 3000, 4000], n_v = 120
     p = plot(dpi=500) 

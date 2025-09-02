@@ -4,7 +4,7 @@ using ProgressMeter
 include("../../src/MiniGW.jl")
 using .MiniGW
 
-wfn = BerkeleyGWSpinorWaveFunction("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
+wfn = BerkeleyGWSpinorWFN("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
 
 
 function MM′_GG′(G_1_idx, G_2_idx, nv_range, k_idx, σ_idx)

@@ -7,8 +7,8 @@ const TOL_LARGE = 1e-6
 const TOL_SMALL = 1e-10
 
 @testset "Pseudobands" begin
-    wfn_full = BerkeleyGWSpinorWaveFunction("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
-    wfn_pseudobands = BerkeleyGWSpinorWaveFunction("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFNo.h5")
+    wfn_full = BerkeleyGWSpinorWFN("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
+    wfn_pseudobands = BerkeleyGWSpinorWFN("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFNo.h5")
     
     # The list comes from /pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/pseudobands.out
     # The full list is too long; 

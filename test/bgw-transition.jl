@@ -5,7 +5,7 @@ using .MiniGW
 using ProgressMeter
 
 @testset "BerkeleyGW: definition of transition matrix: normalization" begin
-    wfn = BerkeleyGWSpinorWaveFunction("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
+    wfn = BerkeleyGWSpinorWFN("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
 
     # When q = 0, G = 0 and n and n′ are the same,  
     # the transition matrix should always be 1.
@@ -21,7 +21,7 @@ end
 # and G_plus_G′_indices_def, but it seems the implementation of G_plus_G′_indices 
 # isn't the main performance issue
 #@testset "BerkeleyGW: accelerated G+G′ finder is consistent with definition" begin
-#    wfn = BerkeleyGWSpinorWaveFunction("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
+#    wfn = BerkeleyGWSpinorWFN("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
 #    k_idx = 3
 #    q_idx = 10 
 #    G_idx = 1000 
@@ -42,7 +42,7 @@ end
 # then the former is wrong as well, 
 # but in a way consistent with the latter.
 @testset "BerkeleyGW: accelerated transition matrix: consistency with the definition" begin
-    wfn = BerkeleyGWSpinorWaveFunction("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
+    wfn = BerkeleyGWSpinorWFN("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
     n_range = 117:120
     n′_range = 3999:4000
     k_idx = 3

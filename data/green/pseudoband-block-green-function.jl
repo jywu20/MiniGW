@@ -5,7 +5,7 @@ include("../../src/MiniGW.jl")
 using .MiniGW
 using Statistics
 
-wfn_full = BerkeleyGWSpinorWaveFunction("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
+wfn_full = BerkeleyGWSpinorWFN("/pscratch/sd/j/jywu/WTe2-xy-relaxed/2.1-wfn-xy/WFN.h5")
 
 #pseudobands_blocks_py_indices_list = [ (3608, 3713), (3714, 3823), (3824, 3939)]
 pseudobands_blocks_py_indices_list = [ (3608, 3650), (3651, 3713), (3714, 3770), (3771, 3823), (3824, 3880), (3881, 3939)]

@@ -1,5 +1,5 @@
 export Ry_BGW, 
-    BerkeleyGWSpinorWaveFunction,
+    BerkeleyGWSpinorWFN,
     G_vec,
     read_wavefunction,
     read_wavefunctions, 
@@ -11,9 +11,16 @@ export Ry_BGW,
 ######################################################################
 #region IO
 
-const Ry_BGW =  13.6056925
+"""
+This file represents a `mf_header` dataset in BerkeleyGW.
+Prototypically, `fid` points to a `WFN.h5` file, 
+but it could be any HDF5 file that has a `mf_header` dataset with all the necessary fields.
 
-struct BerkeleyGWSpinorWaveFunction <: AbstractGWWaveFunction
+If `fid` is not a WFN file, 
+certain methods, like `read_wavefunction`, will not work, 
+because `fid` lacks the datasets recording electron wave functions.
+"""
+struct BerkeleyGWSpinorWFN <: AbstractGWWaveFunction
     fid::HDF5.File
     
     nrk::Int
@@ -29,7 +36,7 @@ struct BerkeleyGWSpinorWaveFunction <: AbstractGWWaveFunction
     gvecs_list::Vector{Vector{SVector{3, Int}}}
 end
 
-function BerkeleyGWSpinorWaveFunction(fid::HDF5.File; tol_sym = 1e-6)
+function BerkeleyGWSpinorWFN(fid::HDF5.File; tol_sym = 1e-6)
     if read(fid["mf_header/kpoints/nspinor"]) != 2
         throw("The HDF5 file is not a spinor wave function.")
     end
@@ -69,27 +76,27 @@ function BerkeleyGWSpinorWaveFunction(fid::HDF5.File; tol_sym = 1e-6)
         gvecs_list[k_idx] = grid_to_list(gvecs[k_idx])
     end
     
-    BerkeleyGWSpinorWaveFunction(fid, 
+    BerkeleyGWSpinorWFN(fid, 
         nrk, rk, full_1BZ, full_to_irreducible,
         el, 
         gk_ranges, ngk, ngkmax, 
         gvecs, gvecs_list)
 end
 
-function BerkeleyGWSpinorWaveFunction(path::AbstractString; allow_write = false)
+function BerkeleyGWSpinorWFN(path::AbstractString; allow_write = false)
     if allow_write
         fid = h5open(path, "r+")
     else
         fid = h5open(path)
     end
-    BerkeleyGWSpinorWaveFunction(fid)
+    BerkeleyGWSpinorWFN(fid)
 end
 
 """
 Close the HDF5 file associated to `wfn`; 
 this doesn't delete the existing data extracted from `wfn.fid`.
 """
-function Base.close(wfn::BerkeleyGWSpinorWaveFunction)
+function Base.close(wfn::BerkeleyGWSpinorWFN)
     close(wfn.fid)
 end
 
@@ -101,7 +108,7 @@ the `band_idx` can be a range;
 in this case the return value has the following form:
 `read_wavefunction(wfn::BerkeleyGWWaveFunction, band_idx, kpt_idx)[G_idx, σ_idx, band_idx]`.
 """
-function read_wavefunction(wfn::BerkeleyGWSpinorWaveFunction, 
+function read_wavefunction(wfn::BerkeleyGWSpinorWFN, 
     band_idx, kpt_idx; extend_G_grid = false)
 
     fid = wfn.fid
@@ -138,7 +145,7 @@ users need to keep a copy of `band_range` and `kpt_range`
 to establish the correspondence between the indices in the total wave function file 
 and the indices in the block extracted.
 """
-function read_wavefunctions(wfn::BerkeleyGWSpinorWaveFunction, 
+function read_wavefunctions(wfn::BerkeleyGWSpinorWFN, 
     band_range, kpt_range)
     
     ngkmax = wfn.ngkmax
@@ -159,11 +166,11 @@ end
 ######################################################################
 #region k-points and G points 
 
-function G_vec_def(wfn::BerkeleyGWSpinorWaveFunction, k_idx, G_idx)
+function G_vec_def(wfn::BerkeleyGWSpinorWFN, k_idx, G_idx)
     wfn.gvecs[k_idx][:, G_idx]
 end
 
-function G_vec_list(wfn::BerkeleyGWSpinorWaveFunction, k_idx, G_idx)
+function G_vec_list(wfn::BerkeleyGWSpinorWFN, k_idx, G_idx)
     wfn.gvecs_list[k_idx][G_idx]
 end
 
@@ -173,7 +180,7 @@ G_vec = G_vec_list
 `q_idx` is assumed to be the index in `wfn.irreducible`; 
 some optimization may be done here.
 """
-function find_k_plus_q_irreducible_1BZ(wfn::BerkeleyGWSpinorWaveFunction, k_idx, q_idx)
+function find_k_plus_q_irreducible_1BZ(wfn::BerkeleyGWSpinorWFN, k_idx, q_idx)
     irreducible_1BZ = wfn.irreducible_1BZ
     full_1BZ = wfn.full_1BZ
     k_plus_q =  irreducible_1BZ[:, k_idx] + irreducible_1BZ[:, q_idx]
@@ -190,21 +197,21 @@ so we assume that in the G grid of `k_idx` and the G grid of `k_plus_q`,
 `G′_idx` is an index in the G grid of `k_idx`.
 Some optimization may be done here.
 """
-function find_G_plus_G′_def(wfn::BerkeleyGWSpinorWaveFunction, k_idx, k_plus_q_idx, G_idx, G′_idx)
+function find_G_plus_G′_def(wfn::BerkeleyGWSpinorWFN, k_idx, k_plus_q_idx, G_idx, G′_idx)
     G_grid_of_k_plus_q = wfn.gvecs[k_plus_q_idx]
     G  = G_vec(wfn, k_idx, G_idx) 
     G′ = G_vec(wfn, k_idx, G′_idx) 
     find_in_grid(G_grid_of_k_plus_q, G + G′)
 end
 
-function find_G_plus_G′(wfn::BerkeleyGWSpinorWaveFunction, k_idx, k_plus_q_idx, G_idx, G′_idx)
+function find_G_plus_G′(wfn::BerkeleyGWSpinorWFN, k_idx, k_plus_q_idx, G_idx, G′_idx)
     G_grid_of_k_plus_q = wfn.gvecs_list[k_plus_q_idx]
     G  = G_vec(wfn, k_idx, G_idx) 
     G′ = G_vec(wfn, k_idx, G′_idx) 
     find_in_list(G_grid_of_k_plus_q, G + G′)
 end
 
-function indices_of_G_plus_G′_def(wfn::BerkeleyGWSpinorWaveFunction, 
+function indices_of_G_plus_G′_def(wfn::BerkeleyGWSpinorWFN, 
     k_idx, q_idx, G_idx)
     k_plus_q_idx = find_k_plus_q_irreducible_1BZ(wfn, k_idx, q_idx)
     
@@ -229,7 +236,7 @@ is the index of G+G′ in the G grid of k+q.
 """
 indices_of_G_plus_G′ = indices_of_G_plus_G′_def
 # The implementation below seems to also have performance problem:
-#function indices_of_G_plus_G′(wfn::BerkeleyGWSpinorWaveFunction, k_idx, k_plus_q_idx, G_idx)
+#function indices_of_G_plus_G′(wfn::BerkeleyGWSpinorWFN, k_idx, k_plus_q_idx, G_idx)
 #    G_grid_of_k = wfn.gvecs[k_idx] 
 #    G_grid_of_k_plus_q = wfn.gvecs[k_plus_q_idx]
 #
@@ -266,7 +273,7 @@ indices_of_G_plus_G′ = indices_of_G_plus_G′_def
 The most naive implementation of the transition matrix M_nn'(k, q, G).
 `n` and `n′` should be scalars.
 """
-function transition_matrix_irreducible_1BZ_def(wfn::BerkeleyGWSpinorWaveFunction, 
+function transition_matrix_irreducible_1BZ_def(wfn::BerkeleyGWSpinorWFN, 
     n, n′, k_idx, q_idx, G_idx)
     
     k_plus_q_idx = find_k_plus_q_irreducible_1BZ(wfn, k_idx, q_idx)
@@ -300,7 +307,7 @@ and then calculating M_nn′(k, q, G) for all possible n and n′
 without recalculating the positions of G+G' seems to be a good idea.
 Therefore 
 """
-function transition_matrix_irreducible_1BZ(wfn::BerkeleyGWSpinorWaveFunction, 
+function transition_matrix_irreducible_1BZ(wfn::BerkeleyGWSpinorWFN, 
     n, n′, k_idx, q_idx, G_idx)
      
     k_plus_q_idx = find_k_plus_q_irreducible_1BZ(wfn, k_idx, q_idx)
@@ -328,11 +335,11 @@ end
 ######################################################################
 #region Energies 
 
-function read_energies(wfn::BerkeleyGWSpinorWaveFunction, band_range, kpt_range)
+function read_energies(wfn::BerkeleyGWSpinorWFN, band_range, kpt_range)
     wfn.el[band_range, kpt_range]
 end
 
-function transition_energy(wfn::BerkeleyGWSpinorWaveFunction, n, n′, k_idx, q_idx)
+function transition_energy(wfn::BerkeleyGWSpinorWFN, n, n′, k_idx, q_idx)
     E_n_k_plus_q = wfn.el[n,  find_k_plus_q_irreducible_1BZ(wfn, k_idx, q_idx)]
     E_n′_k       = wfn.el[n′, k_idx]
     E_n_k_plus_q - E_n′_k
